@@ -19,4 +19,4 @@ Este repositório visa acompanhar o desenvolvimento do projeto dedicado a cadeir
 7. Rode a aplicação: streamlit run Main.py
 
 # Extra 
-    1. Artigo do projeto: https://docs.google.com/document/d/1lQLAJQI0e4u8EJ0v_5CN4mbdeVDB7pT9H9Krj8aW9wg/edit?usp=sharing
+1. Artigo do projeto: https://docs.google.com/document/d/1lQLAJQI0e4u8EJ0v_5CN4mbdeVDB7pT9H9Krj8aW9wg/edit?usp=sharing
