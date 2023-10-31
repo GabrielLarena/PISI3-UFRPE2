@@ -1,4 +1,4 @@
-#OTAKU ON DEMAND
+# OTAKU ON DEMAND
 
 ## Introdução
 Este documento especifica os requisitos do sistema OtakuOnDemand desenvolvido para auxiliar na busca, categorização, descoberta e avaliação de conteúdos de animes e mangás. 
