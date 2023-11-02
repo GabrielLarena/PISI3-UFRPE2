@@ -18,14 +18,21 @@ def changePlace(dataf, c1, c2):
     dataf.rename(columns={c1: c2, c2: c1}, inplace=True)
 
 
+def toMinutes(column):
+    hours = min = 0
+    part = column.split()
+    if 'hr.' in part:
+        hours = int(part[0])
+        if 'min.' in part:
+            min = int(part[2])
+        return (hours * 60) + min
+    elif 'min.' in column:
+        return int(part[0])
+    return hours + min 
+
+
 def main():
-    df = pd.read_csv('dataset_files/AnimeList.csv')
-    divColumn(df, 'aired_string', 'start_date', 'end_date')
-    toDate(df, 'start_date')
-    toDate(df, 'end_date')
-    changePlace(df, 'start_date', 'duration')   
-    changePlace(df, 'end_date', 'rating')
-    df.to_csv('dataset_files/AnimeList.csv')
+    pass
 
 
 main()
