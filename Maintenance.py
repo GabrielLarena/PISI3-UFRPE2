@@ -4,13 +4,13 @@ import numpy as np
 def divColumn (dataf, column, nc1, nc2):
     "divida column em duas colunas nc1 e nc2"
     dataf[[nc1, nc2]] = dataf[column].str.split(' to ', n=1, expand=True)
-
+    return dataf[[nc1, nc2]]
 
 def toDate(dataf, column):
     "Substitui os valores Not Available por valores nulos e converte a coluna em data."
     dataf[column].replace('Not available', np.nan, inplace=True)
-    dataf[column] = pd.to_datetime(dataf[column], format='%b %d, %Y', errors='coerce')
-
+    dataf[column] = pd.to_datetime(dataf[column], format='%Y-%m-%d', errors='coerce')
+    return dataf[column]
 
 def changePlace(dataf, c1, c2):
     "Troca duas colunas de lugar"
