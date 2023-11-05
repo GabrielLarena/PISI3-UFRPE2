@@ -91,7 +91,7 @@ def rating(animelist):
     ax.pie(rating_counts['rating'].value_counts(), labels=rating_counts['rating'].value_counts().index, autopct='%1.1f%%')
     plt.savefig('foo7.png', bbox_inches='tight')
 
-def naosei(animelist):
+def scatter(animelist):
     animelist.sort_values("rank", inplace = True)
     scatter_anime = animelist[animelist['rank'] != 0]
     sns.scatterplot(scatter_anime.head(100), x='rank', y='popularity', size='scored_by', sizes=(10, 200), hue='scored_by', hue_norm=(0, 7))
@@ -108,9 +108,4 @@ broadcast(df_anime)
 types(animelist)
 source(animelist)
 rating(animelist)
-#naosei(animelist)
-
-animelist.sort_values("rank", inplace = True)
-scatter_anime = animelist[animelist['rank'] != 0]
-sns.scatterplot(scatter_anime.head(100), x='rank', y='popularity', size='scored_by', sizes=(10, 200), hue='scored_by', hue_norm=(0, 7))
-plt.savefig('foo8.png', bbox_inches='tight')
+scatter(df_anime)
