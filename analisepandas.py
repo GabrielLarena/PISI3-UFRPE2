@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
 import seaborn as sns
+import datetime
 plt.style.use("ggplot")
 
 def genre_count(anime_genre):
@@ -105,26 +106,97 @@ def scatter(animelist):
     sns.scatterplot(scatter_anime.head(100), x='rank', y='popularity', size='scored_by', sizes=(10, 200), hue='scored_by', hue_norm=(0, 7)) 
     plt.savefig('foo8.png', bbox_inches='tight')
 
-#Chamamos os dois dataframes utilizados, AnimeList e UserList e armazenamos em duas variáveis
-df_anime = pd.read_parquet('dataset_files/AnimeList.parquet')
-df_users = pd.read_parquet('dataset_files/UserList.parquet')
 
-#desconsideramos qualquer linha que tenha o genero vazio e pegamos as colunas escolhidas para analise
-animelist = df_anime[df_anime.genre.notnull()][['anime_id','title','type','source','episodes','aired_string','duration','rating','score','scored_by','rank','popularity','premiered','studio','genre']].copy()
+def genre_dist(df):
+    """ Gera um pie plot a partir dos valores gender do dataframe."""
+    df['gender'].value_counts().plot.pie(autopct='%1.1f%%', 
+                                         startangle=120,
+                                         xlabel='',
+                                         ylabel='')
+    plt.show()
 
-#chamamos a função genre_count, que vai contar quantos generos possui na coluna genre.
-genre_count(animelist.genre)
-#nós chamamos a função genre_comedy, que vai verificar quantos generos acompanham o genero comedy
-genre_comedy(animelist.genre)
-#a função season que pega a coluna premiered e separa as estações do ano e plota um gráfico com a quantidades
-season(animelist)
-#função broadcast faz o mesmo q a anterior mas para os dias da semana
-broadcast(df_anime)
-#função types que plota um gráfico usando a coluna "types" com a quantia dos tipos de AnimeList
-types(animelist)
-#função source que faz o mesmo que a anterior mas para a coluna "source"
-source(animelist)
-#função rating que verifica para qual faixa etária aquele anime é destinado
-rating(animelist)
-#função scatter que cria um scatter plot usando o rank, a popularidade e a quantia de votos. 
-scatter(df_anime)
+
+def toDate(column):
+    """ Converte coluna para formato data."""
+    return pd.to_datetime(column, errors = 'coerce')
+
+
+def spent_box(df):
+    """ Plota um gráfico boxplot com a distribuição de tempo (time_spent) de consumo
+        em relação a gênero (gender)
+    """
+
+    fig, ax = plt.subplots(nrows=1, ncols=1,figsize=(5, 6))
+    sns.boxplot(x="gender", 
+                y="user_days_spent_watching",
+                data=df,
+                palette="Set2",
+                )
+    plt.ylabel('spent')
+    ax.set_ylim([0, 300])
+    plt.show()
+
+
+def drop_out(df):
+    """ Dropa outliers no df"""
+    df.drop(df[df.spent>1000].index, inplace=True)
+    df.drop(df[df.age>80].index, inplace=True)
+    df.drop(df[df.age<0].index, inplace=True)
+
+
+def convert_age(column):
+    age = []
+
+    for x in column:
+        age.append(round((datetime.datetime.now()-x).days/365.25,1))
+    return age
+
+def spent_scatter(df):
+    """ Gera um scatterplot com a relação idade/tempo consumo e identificando por gênero. """
+    
+    birthdays = toDate(df['birth_date'])
+    age = convert_age(birthdays)
+    temp = {'age': age, 'gender':df.gender, 'spent': df.user_days_spent_watching}
+    age_spent = pd.DataFrame(temp, columns=['age', 'gender', 'spent'])
+    drop_out(age_spent)
+    
+
+    age_spent.plot(kind='scatter', 
+                    x='age', y='spent', alpha=0.5, 
+                    figsize = (12,8),
+                    color=["r" if each =="Female" else "b" for each in age_spent.gender])
+    plt.show()
+
+
+def main():
+    #Chamamos os dois dataframes utilizados, AnimeList e UserList e armazenamos em duas variáveis
+    df_anime = pd.read_parquet('dataset_files/AnimeList.parquet')
+    df_users = pd.read_parquet('dataset_files/UserList.parquet')
+
+    #desconsideramos qualquer linha que tenha o genero vazio e pegamos as colunas escolhidas para analise
+    animelist = df_anime[df_anime.genre.notnull()][['anime_id','title','type','source','episodes','aired_string','duration','rating','score','scored_by','rank','popularity','premiered','studio','genre']].copy()
+
+    # genre_dist(df_users)
+
+    # spent_box(df_users)
+
+    # spent_scatter(df_users)
+
+    # #chamamos a função genre_count, que vai contar quantos generos possui na coluna genre.
+    # genre_count(animelist.genre)
+    # #nós chamamos a função genre_comedy, que vai verificar quantos generos acompanham o genero comedy
+    # genre_comedy(animelist.genre)
+    # #a função season que pega a coluna premiered e separa as estações do ano e plota um gráfico com a quantidades
+    # season(animelist)
+    # #função broadcast faz o mesmo q a anterior mas para os dias da semana
+    # broadcast(df_anime)
+    # #função types que plota um gráfico usando a coluna "types" com a quantia dos tipos de AnimeList
+    # types(animelist)
+    # #função source que faz o mesmo que a anterior mas para a coluna "source"
+    # source(animelist)
+    # #função rating que verifica para qual faixa etária aquele anime é destinado
+    # rating(animelist)
+    # #função scatter que cria um scatter plot usando o rank, a popularidade e a quantia de votos. 
+    # scatter(df_anime)
+
+main()
