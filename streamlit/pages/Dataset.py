@@ -2,7 +2,7 @@ import io
 import streamlit as st
 import pandas as pd
 
-df = pd.read_parquet("data/AnimeList.parquet")
+df = pd.read_parquet("data/AnimeList2023.parquet")
 
 st.title("Dataset Original")
 st.markdown(""" 
