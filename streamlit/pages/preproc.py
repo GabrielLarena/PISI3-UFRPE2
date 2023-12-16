@@ -14,8 +14,7 @@ animelist = df[df.Genres.notnull()][['anime_id','Name','Score','Genres','Synopsi
 animelist[["Start", "End"]] = df['Aired'].str.split(' to ', n=1, expand=True)
 
 animelist["Start"] = pd.to_datetime(animelist["Start"], format='%b %d, %Y', errors='coerce')
-animelist["End"] = pd.to_datetime(animelist["End"], format='%b %d, %Y', errors='coerce')
-
+animelist.drop(columns=["End"], inplace=True)
 #transformar a string em float para obtermos os minutos
 def toMinutes(column):
     hours = 0
@@ -40,11 +39,10 @@ st.write(animelist.head(10))
 
 #remover os NULL
 animelist.dropna(subset=["Start"], inplace=True)
-animelist.dropna(subset=["End"], inplace=True)
 
 #Remover os valores não conhecidos
 with st.expander("UNKNOWN"):
-    data = animelist.query('(Name=="UNKNOWN") or (Score=="UNKNOWN") or (Type=="UNKNOWN") or (Episodes=="UNKNOWN") or (Producers=="UNKNOWN") or (Licensors=="UNKNOWN") or (Studios=="UNKNOWN") or (Rating=="UNKNOWN") or (Rank=="UNKNOWN")')
+    data = animelist.query('(Name=="UNKNOWN") or (Score=="UNKNOWN") or (Type=="UNKNOWN") or (Episodes=="UNKNOWN") or (Studios=="UNKNOWN") or (Rating=="UNKNOWN") or (Rank=="UNKNOWN")')
     st.write(len(data['Name']))
 
 #fazer o left join entre o dataframe principal e o dataframe onde os valores UNKNOWN foram removidos, obtendo apenas o dataset com todos os valores conhecidos
@@ -52,7 +50,10 @@ merged_df = animelist.merge(data, on='anime_id', how='left', indicator=True).cop
 animelist = merged_df[merged_df['_merge'] == 'left_only'].drop(columns='_merge').copy()
 
 #removendo colunas vazias
-animelist.drop(columns=["Name_y", 'Score_y', 'Genres_y', 'Synopsis_y', 'Type_y', 'Episodes_y', 'Aired_y', 'Status_y', 'Producers_y', 'Licensors_y', 'Studios_y', 'Source_y', 'Duration_y', 'Rating_y', 'Rank_y', 'Popularity_y', 'Favorites_y', 'Scored By_y', 'Members_y', 'Start_y', 'End_y'], inplace=True)
+animelist.drop(columns=["Name_y", 'Score_y', 'Genres_y', 'Synopsis_y', 'Type_y', 'Episodes_y', 'Aired_y', 
+    'Status_y', 'Studios_y', 'Source_y', 'Duration_y', 'Rating_y', 'Rank_y', 'Popularity_y', 
+    'Favorites_y', 'Scored By_y', 'Members_y', 'Start_y', 'Producers_y', 'Licensors_y'], inplace=True)
+
 #renomeando as colunas por causa do left join
 animelist = animelist.rename(columns=lambda x: x[:-2] if x.endswith('x') else x)
 
@@ -68,4 +69,4 @@ s = buffer.getvalue()
 with st.expander("Info"):
     st.text(s)
 
-st.write(animelist.loc[animelist["Name"] == "Cowboy Bebop"])
+animelist.to_parquet("data/preprocessamento/AnimeList.parquet")
