@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:otaku_on_demand/pages/signinPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -12,6 +15,10 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _senha = TextEditingController();
   TextEditingController _confirmarsenha =
       TextEditingController(); // PasswordValidation
+
+  //var _salvarnome = '';
+  var _salvaremail = '';
+  var _salvarsenha = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -27,6 +34,7 @@ class _SignUpPageState extends State<SignUpPage> {
           backgroundColor: Colors.white,
         ),
         body: Padding(
+          padding: EdgeInsets.all(50),
           child: Center(
             child: SingleChildScrollView(
               child: Form(
@@ -74,28 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "O nome pode ter no máximo 18 caracteres";
                           }
 
-                          return null;
-                        }, // FormValidation
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        autofocus: true,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            labelText: "Data de Nascimento",
-                            labelStyle: TextStyle(
-                                color: Color.fromRGBO(30, 30, 30, 100),
-                                fontSize: 15)),
-                        validator: (value) {
-                          if (value != null && value.isEmpty) {
-                            return "A data de nascimento é obrigatória";
-                          } else if (value != null &&
-                              !RegExp(r"(?:0[1-9]|[12][0-9]|3[01])[-/.](?:0[1-9]|1[012])[-/.](?:19\d{2}|20[01][0-9]|2020)")
-                                  .hasMatch(value)) {
-                            return "Insira uma data valida";
-                          }
+                          _salvarnome = value!;
 
                           return null;
                         }, // FormValidation
@@ -120,6 +107,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "Insira um email valido";
                           }
 
+                          _salvaremail = value!;
+
                           return null;
                         }, // FormValidation
                       ),
@@ -142,6 +131,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           } else if (value != null && value.length < 8) {
                             return "A senha precisa ter no mínimo 9 caracteres";
                           }
+
+                          _salvarsenha = value!;
 
                           return null;
                         }, // FormValidation ,
@@ -184,7 +175,19 @@ class _SignUpPageState extends State<SignUpPage> {
                           onPressed: () {
                             if (!_formKey.currentState!.validate()) {
                               return;
-                            } // FormValidation
+                            }
+
+                            //firebase salvando email e senha, procurar como salvar nome do usuario depois
+                            try{
+                              _firebase.createUserWithEmailAndPassword(email: _salvaremail, password: _salvarsenha);
+                            } on FirebaseAuthException catch (error) {
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message ?? 'Falha ao salvar.'),
+                              ),
+                              );
+
+                            }// FormValidation
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -196,7 +199,6 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
           ),
-          padding: EdgeInsets.all(50),
         ));
   }
 }

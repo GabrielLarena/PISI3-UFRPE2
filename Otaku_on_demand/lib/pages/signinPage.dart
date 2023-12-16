@@ -4,6 +4,9 @@ import 'package:otaku_on_demand/pages/signupPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:otaku_on_demand/pages/forgotPassword.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class SignInPage extends StatefulWidget {
   @override
@@ -11,6 +14,11 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  void _submit() {}
+
+  final emailController = TextEditingController();
+  var senhaController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +43,7 @@ class _SignInPageState extends State<SignInPage> {
                     decoration: BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(
-                              "assets/images/logotipo.jpg",
+                              "assets/images/logotipo.png",
                             ),
                             fit: BoxFit.fill)),
                   ),
@@ -56,6 +64,7 @@ class _SignInPageState extends State<SignInPage> {
                   Divider(),
                   TextFormField(
                     autofocus: true,
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                         labelText: "Email",
@@ -68,6 +77,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   TextFormField(
                     autofocus: true,
+                    controller: senhaController,
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -126,6 +136,19 @@ class _SignInPageState extends State<SignInPage> {
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
                       onPressed: () {
+                        try {
+                          _firebase.signInWithEmailAndPassword(
+                              email: emailController.text,
+                              password: senhaController.text);
+                        } on FirebaseAuthException catch (error) {
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  error.message ?? 'Falha ao fazer o login.'),
+                            ),
+                          );
+                        }
                         Navigator.push(
                             context,
                             MaterialPageRoute(
