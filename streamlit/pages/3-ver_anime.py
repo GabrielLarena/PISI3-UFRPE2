@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 
 df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
-df_anime.drop(columns=["Unnamed: 0"], inplace=True)
-
 st.title("Consultar Anime")
 anime = st.selectbox("Selecione o anime: ", df_anime['Name'])
 
@@ -18,18 +16,18 @@ if anime:
 
     st.write(f"Gêneros: {anime_info.iloc[0]['Genres']}")
 
-    st.write(f"Ranking Melhor Nota: {int(anime_info.iloc[0]['Rank'])}° Lugar")
+    st.write(f"Ranking Melhor Nota: {anime_info.iloc[0]['Rank']}° Lugar")
 
     st.write(f"Ranking Popularidade: {anime_info.iloc[0]['Popularity']}° Lugar")
 
     st.write(f"Data de lançamento: {anime_info.iloc[0]['Start']}")
 
-    st.write(f"Duração: {int(anime_info.iloc[0]['Duration'])} minutos")
+    st.write(f"Duração: {anime_info.iloc[0]['Duration']} minutos")
 
     st.write(f"Tipo: {anime_info.iloc[0]['Type']}")
 
     st.write(f"Nota no MAL: {anime_info.iloc[0]['Score']}")
 
-    st.write(f"Número de votos: {int(anime_info.iloc[0]['Scored By'])}")
+    st.write(f"Número de votos: {anime_info.iloc[0]['Scored By']}")
 else:
     st.write("Selecione um anime")

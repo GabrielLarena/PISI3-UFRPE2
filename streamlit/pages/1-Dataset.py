@@ -2,12 +2,12 @@ import io
 import streamlit as st
 import pandas as pd
 
-df = pd.read_parquet("data/AnimeList2023.parquet")
+df_anime = pd.read_parquet("data/AnimeList2023.parquet")
+df_user = pd.read_parquet("data/UserList2023.parquet")
+#df_userscore = pd.read_parquet("data/UserAnimeList2023.parquet")
 
 st.title("Dataset Original")
-st.markdown(""" 
-    Aqui se encontra o dataset antes do pré-processamento.
-""")
+st.markdown("Aqui se encontra os dataframes antes do pré-processamento")
 
 with st.expander("Descrição das colunas"):
     st.markdown('''
@@ -46,14 +46,37 @@ with st.expander("Descrição das colunas"):
         * ending_theme: Música de fechamento
 
 ''')
-st.write("Cabeçalho")
-st.write(df.head())
 
+st.write("Cabeçalho da lista de animes")
+st.write(df_anime.head())
 
-st.write("Função info")
+st.write("Cabeçalho da lista de Usuários")
+st.write(df_user.head())
+
+#st.write("Cabeçalho da lista de animes")
+#st.write(df_userscore.head())
+
+st.write("Função info para lista de animes")
 buffer = io.StringIO()
-df.info(buf=buffer)
+df_anime.info(buf=buffer)
 s = buffer.getvalue()
 
-with st.expander("Info"):
+with st.expander("Info Animes"):
     st.text(s)
+
+st.write("Função info para lista de Usuários")
+buffer2 = io.StringIO()
+df_user.info(buf=buffer2)
+s2 = buffer2.getvalue()
+
+with st.expander("Info Users"):
+    st.text(s2)
+'''
+st.write("Função info para lista de Usuários e Animes")
+buffer3 = io.StringIO()
+df_userscore.info(buf=buffer3)
+s3 = buffer3.getvalue()
+
+with st.expander("Info Animes"):
+    st.text(s3)
+    '''
