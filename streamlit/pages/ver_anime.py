@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-df_anime = pd.read_csv("data/animelist2023V2.csv")
+df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
 df_anime.drop(columns=["Unnamed: 0"], inplace=True)
 
 st.title("Consultar Anime")
@@ -31,8 +31,5 @@ if anime:
     st.write(f"Nota no MAL: {anime_info.iloc[0]['Score']}")
 
     st.write(f"Número de votos: {int(anime_info.iloc[0]['Scored By'])}")
-
-    
-
 else:
-    st.write("Por favor, selecione um filme")
+    st.write("Selecione um anime")
