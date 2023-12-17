@@ -5,7 +5,7 @@ import io
 #ler o dataset
 df = pd.read_parquet("data/AnimeList2023.parquet")
 df_user = pd.read_parquet("data/UserList2023.parquet")
-#df_userscore = pd.read_parquet("data/UserAnimeList2023.parquet")
+df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList2.parquet")
 
 #pegar apenas as colunas úteis
 animelist = df[df.Genres.notnull()][['anime_id','Name','Score','Genres','Synopsis','Type','Episodes'
@@ -22,8 +22,8 @@ animelist.drop(columns=["End"], inplace=True)
 
 user["Birthday"] = pd.to_datetime(user["Birthday"], format='ISO8601', errors='coerce')
 user["Joined"] = pd.to_datetime(user["Joined"], format='ISO8601', errors='coerce')
-
-
+animelist = animelist.rename(columns={"Name": "anime_title"})
+df_userscore = df_userscore.rename(columns={"Anime Title": "anime_title"})
 #transformar a string em float para obtermos os minutos
 def toMinutes(column):
     hours = 0
@@ -48,15 +48,15 @@ animelist.dropna(subset=["Start"], inplace=True)
 
 #Remover os valores não conhecidos
 with st.expander("UNKNOWN"):
-    data = animelist.query('(Name=="UNKNOWN") or (Score=="UNKNOWN") or (Type=="UNKNOWN") or (Episodes=="UNKNOWN") or (Studios=="UNKNOWN") or (Rating=="UNKNOWN") or (Rank=="UNKNOWN")')
-    st.write(len(data['Name']))
+    data = animelist.query('(anime_title=="UNKNOWN") or (Score=="UNKNOWN") or (Type=="UNKNOWN") or (Episodes=="UNKNOWN") or (Studios=="UNKNOWN") or (Rating=="UNKNOWN") or (Rank=="UNKNOWN")')
+    st.write(len(data['anime_title']))
 
 #fazer o left join entre o dataframe principal e o dataframe onde os valores UNKNOWN foram removidos, obtendo apenas o dataset com todos os valores conhecidos
 merged_df = animelist.merge(data, on='anime_id', how='left', indicator=True).copy()
 animelist = merged_df[merged_df['_merge'] == 'left_only'].drop(columns='_merge').copy()
 
 #removendo colunas vazias
-animelist.drop(columns=["Name_y", 'Score_y', 'Genres_y', 'Synopsis_y', 'Type_y', 'Episodes_y', 'Aired_y', 
+animelist.drop(columns=["anime_title_y", 'Score_y', 'Genres_y', 'Synopsis_y', 'Type_y', 'Episodes_y', 'Aired_y', 
     'Status_y', 'Studios_y', 'Source_y', 'Duration_y', 'Rating_y', 'Rank_y', 'Popularity_y', 
     'Favorites_y', 'Scored By_y', 'Members_y', 'Start_y', 'Producers_y', 'Licensors_y'], inplace=True)
 
@@ -92,5 +92,15 @@ s2 = buffer2.getvalue()
 with st.expander("Info Users"):
     st.text(s2)
 
+st.write("Função info para usuários e notas")
+buffer3 = io.StringIO()
+df_userscore.info(buf=buffer3)
+s3 = buffer3.getvalue()
+
+#mostrando as informações de cada coluna
+with st.expander("Info Users"):
+    st.text(s3)
+
 animelist.to_parquet("data/preprocessamento/AnimeList.parquet")
 user.to_parquet("data/preprocessamento/UserList.parquet")
+df_userscore.to_parquet("data/preprocessamento/UserAnimeList2.parquet")

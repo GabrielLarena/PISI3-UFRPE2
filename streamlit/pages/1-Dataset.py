@@ -4,7 +4,8 @@ import pandas as pd
 
 df_anime = pd.read_parquet("data/AnimeList2023.parquet")
 df_user = pd.read_parquet("data/UserList2023.parquet")
-#df_userscore = pd.read_parquet("data/UserAnimeList2023.parquet")
+df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList2.parquet")
+#df_userscore.to_csv("UserAnimeList.csv")
 
 st.title("Dataset Original")
 st.markdown("Aqui se encontra os dataframes antes do pré-processamento")
@@ -53,8 +54,8 @@ st.write(df_anime.head())
 st.write("Cabeçalho da lista de Usuários")
 st.write(df_user.head())
 
-#st.write("Cabeçalho da lista de animes")
-#st.write(df_userscore.head())
+st.write("Cabeçalho da lista de Usuário sobre anime")
+st.write(df_userscore.head())
 
 st.write("Função info para lista de animes")
 buffer = io.StringIO()
@@ -71,7 +72,7 @@ s2 = buffer2.getvalue()
 
 with st.expander("Info Users"):
     st.text(s2)
-'''
+
 st.write("Função info para lista de Usuários e Animes")
 buffer3 = io.StringIO()
 df_userscore.info(buf=buffer3)
@@ -79,4 +80,3 @@ s3 = buffer3.getvalue()
 
 with st.expander("Info Animes"):
     st.text(s3)
-    '''

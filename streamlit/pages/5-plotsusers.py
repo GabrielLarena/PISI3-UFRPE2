@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 df_user = pd.read_parquet("data/preprocessamento/UserList.parquet")
 
 def boxplot(df_user):
-    st.markdown('<h3>Diagrama de Caixa (<i>Boxplot</i>)</h3>', unsafe_allow_html=True)
+    st.markdown('<h3>Informações dos usuários</h3>', unsafe_allow_html=True)
     c1, c2 = st.columns([.3,.7])
     cols = ['Days Watched', 'Mean Score', 'Episodes Watched', 'Completed', 'Dropped']
     serie_col = c1.selectbox('Série*', options=cols, key='serie_2')
