@@ -5,7 +5,7 @@ import io
 #ler o dataset
 df = pd.read_parquet("data/AnimeList2023.parquet")
 df_user = pd.read_parquet("data/UserList2023.parquet")
-df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList2.parquet")
+df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList.parquet")
 
 #pegar apenas as colunas úteis
 animelist = df[df.Genres.notnull()][['anime_id','Name','Score','Genres','Synopsis','Type','Episodes'

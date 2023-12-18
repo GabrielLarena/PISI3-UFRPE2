@@ -6,4 +6,4 @@ import plotly.graph_objects as go
 
 df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
 df_user = pd.read_parquet("data/preprocessamento/UserList.parquet")
-df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList2.parquet")
+df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList.parquet")

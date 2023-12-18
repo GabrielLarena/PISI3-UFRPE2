@@ -4,7 +4,7 @@ import plotly.express as px
 
 df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
 df_user = pd.read_parquet("data/preprocessamento/UserList.parquet")
-df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList2.parquet")
+df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList.parquet")
 
 def boxplot(df_user):
     st.markdown('### Idade dos usuários', unsafe_allow_html=True)

@@ -4,8 +4,7 @@ import pandas as pd
 
 df_anime = pd.read_parquet("data/AnimeList2023.parquet")
 df_user = pd.read_parquet("data/UserList2023.parquet")
-df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList2.parquet")
-#df_userscore.to_csv("UserAnimeList.csv")
+df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList.parquet")
 
 st.title("Dataset Original")
 st.markdown("Aqui se encontra os dataframes antes do pré-processamento")
