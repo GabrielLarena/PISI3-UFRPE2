@@ -25,9 +25,25 @@ def boxplot(df_user):
         fig.update_layout(yaxis_range=[0, 60])
     else:
         fig.update_layout(yaxis_range=[0, 13000])
-
-    #fig.update_layout(yaxis_range=[0, 10000])
     c2.plotly_chart(fig, use_container_width=True)
     st.write("TODO: adicionar idade do usuário, idade da conta")
 
+def barplot(def_user):
+    df_gender = df_user['Gender'].value_counts()
+    fig = px.bar(df_gender)
+    st.plotly_chart(fig, use_container_width=True)
+
+def scatterplot(def_user):
+    current_year = pd.Timestamp.now().year
+    df_user['age'] = current_year - df_user['Birthday'].dt.year
+    df_user['age_account'] = current_year - df_user['Joined'].dt.year
+    fig = px.scatter(df_user, x='age', y='Days Watched', color='Gender')
+    fig.update_layout(yaxis_range=[0, 1000])
+    fig.update_layout(xaxis_range=[0, 80])
+    st.plotly_chart(fig, use_container_width=True)
+
+
+
 boxplot(df_user)
+barplot(df_user)
+scatterplot(df_user)

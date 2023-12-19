@@ -103,14 +103,13 @@ def toMinutes(column):
 
 animelist["Duration"] = animelist["Duration"].apply(toMinutes)
 
-st.write('Separaremos a coluna Gender, que é uma string, em uma lista. Em seguida removeremos os valores nulos da coluna Start')
+st.write('Separaremos a coluna Gender, que é uma string, em uma lista. Em seguida removeremos os valores nulos da coluna Start. Também converteremos algumas colunas para float')
 
 st.write('''
     ```
     animelist["Genres"] = animelist.Genres.str.split(", ").copy()
     animelist.dropna(subset=["Start"], inplace=True)
-
-
+    animelist = animelist.astype({'Score':'float','Episodes':'float', 'Rank': 'float', 'Scored By': 'float'})
     ```
 ''')
 #separar os generos em uma lista
@@ -145,6 +144,7 @@ user.drop(columns=["Location"], inplace=True)
 
 #renomeando as colunas por causa do left join
 animelist = animelist.rename(columns=lambda x: x[:-2] if x.endswith('x') else x)
+animelist = animelist.astype({'Score':'float','Episodes':'float', 'Rank': 'float', 'Scored By': 'float'})
 
 st.write('Por fim, iremos rever como os dados estão dispostos')
 
