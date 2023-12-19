@@ -11,7 +11,7 @@ df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
 
 def wc(df):
     s = pd.Series(list(chain.from_iterable(df['Genres'])))    
-    wordcloud = WordCloud()
+    wordcloud = WordCloud(background_color='white')
     wordcloud.generate_from_frequencies(frequencies=s.value_counts())
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
@@ -21,11 +21,12 @@ def barplots(df):
     c1, c2 = st.columns([.2,.8])
     s = pd.Series(list(chain.from_iterable(df['Genres'])))
     df_genre = s.value_counts()
-    
-    cols = ['Type', 'Source', 'Rating', 'Genres']
+    cols = ['Type', 'Source', 'Rating', 'Genres', 'Duration']
     series_col = c1.selectbox('Série*', options=cols, key='serie_1')
     if series_col == 'Genres':
         fig = px.bar(df_genre, labels={'x': 'Genero', 'y': 'Numero de Animes'})
+    elif series_col == 'Duration':
+        fig = px.histogram(df[series_col].value_counts(), x=df[series_col].value_counts().index, y=df[series_col].value_counts().values)
     else:
         fig = px.bar(df[series_col].value_counts(), labels={'x': "Numero de animes", 'y': series_col})
     c2.plotly_chart(fig, use_container_width=True)
@@ -54,10 +55,10 @@ if user:
 
     st.write(f"Número de episódios assistidos: {(user_info.iloc[0]['Episodes Watched']):.0f}")
 
-    test = df_userscore[df_userscore["Username"] == user_info.iloc[0]['Username']]
-    test2 = pd.merge(df_anime, test, how='inner', on=['anime_title'])
-    wc(test2)
-    barplots(test2)
+    userinfo = df_userscore[df_userscore["Username"] == user_info.iloc[0]['Username']]
+    animeinfo = pd.merge(df_anime, userinfo, how='inner', on=['anime_title'])
+    wc(animeinfo)
+    barplots(animeinfo)
 
 else:
     st.write("Selecione um usuário")

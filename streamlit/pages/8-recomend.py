@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import sigmoid_kernel
 
 df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
-df_anime = df_anime.drop(columns=['English name', 'Other name', 'Premiered', 'Status', 'Licensors', 'Popularity', 'Rank', 'Episodes', 'Aired', 'Producers', 'Studios', 'Source', 'Duration', 'Rating', 'Favorites', 'Image URL'])
+#df_anime = df_anime.drop(columns=['Status', 'Licensors', 'Popularity', 'Rank', 'Episodes', 'Aired', 'Producers', 'Studios', 'Source', 'Duration', 'Rating', 'Favorites'])
 
 # retirar palavras simples
 tfv = TfidfVectorizer(min_df=3, max_features=None,
@@ -23,10 +23,10 @@ tfv_matrix = tfv.fit_transform(df_anime['Synopsis'])
 sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
 
 #mapiamento reverso os indices com os titulos
-indices = pd.Series(df_anime.index, index=df_anime['Name']).drop_duplicates()
+indices = pd.Series(df_anime.index, index=df_anime['anime_title']).drop_duplicates()
 
 st.title("Recomendar Anime")
-anime = st.selectbox("Selecione o anime: ", df_anime['Name'])
+anime = st.selectbox("Selecione o anime: ", df_anime['anime_title'])
 
 def recomend(title, sig=sig):
     #index do anime escolhido
@@ -55,9 +55,9 @@ if anime:
     
     rec_df = recomend(anime)
     df_anime.set_index('anime_id', inplace=True)
-    anime_info = df_anime.loc[df_anime["Name"] == anime]
+    anime_info = df_anime.loc[df_anime["anime_title"] == anime]
     
-    st.title(f"{anime_info.iloc[0]['Name']}")
+    st.title(f"{anime_info.iloc[0]['anime_title']}")
 
     st.write(f"Sinopse: {anime_info.iloc[0]['Synopsis']}")
 
@@ -69,13 +69,13 @@ if anime:
 
     st.write(f"Nota no MAL: {anime_info.iloc[0]['Score']}")
 
-    st.write(f"Número de votos: {anime_info.iloc[0]['Scored By']}")
+    st.write(f"Número de votos: {float(anime_info.iloc[0]['Scored By']):.0f}")
 
     #printing os animes recomendados 
     for i in range(10):
-     st.header(f"{i}° Recomendação")
+     st.header(f"{i+1}° Recomendação")
 
-     st.write(f"Nome do anime: {rec_df.iloc[i]['Name']}")
+     st.write(f"Nome do anime: {rec_df.iloc[i]['anime_title']}")
 
      st.write(f"Sinopse: {rec_df.iloc[i]['Synopsis']}")
 
@@ -87,6 +87,6 @@ if anime:
 
      st.write(f"Nota no MAL: {rec_df.iloc[i]['Score']}")
 
-     st.write(f"Número de votos: {rec_df.iloc[i]['Scored By']}")
+     st.write(f"Número de votos: {float(rec_df.iloc[i]['Scored By']):.0f}")
 else:
     st.write("Selecione um anime")

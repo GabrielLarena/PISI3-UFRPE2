@@ -7,23 +7,23 @@ df_user = pd.read_parquet("data/preprocessamento/UserList.parquet")
 df_userscore = pd.read_parquet("data/preprocessamento/UserAnimeList.parquet")
 
 def boxplot(df_user):
-    st.markdown('### Idade dos usuários', unsafe_allow_html=True)
+    st.markdown('### Informações dos usuários', unsafe_allow_html=True)
     #df['birth_date'] = pd.to_datetime(df_user['Birthday'])
     current_year = pd.Timestamp.now().year
     df_user['age'] = current_year - df_user['Birthday'].dt.year
     df_user['age_account'] = current_year - df_user['Joined'].dt.year
-    #c1, c2 = st.columns([.3,.7])
-    cols = ['age', 'age_account']
-    #serie_col = c1.selectbox('Série*', options=cols, key='serie_2')
+    c1, c2 = st.columns([.3,.7])
     cols = ['age', 'Gender']
     cols.reverse()
-    df_plot = df_user[cols]
-    fig = px.box(df_plot,x=cols[0],y=cols[1])
-    fig.update_layout(yaxis_range=[0, 80])
-    #fig.show()
-    #fig.update_layout(yaxis_range=[0, 10000])
-    st.plotly_chart(fig, use_container_width=True)
+    serie_col = c1.selectbox('Série*', options=cols, key='serie_2')
+    if serie_col == 'Gender':
+        fig = px.bar(df_user['Gender'], labels={'x': 'Genero', 'y': 'Numero de usuários'})
+    else:
+        df_plot = df_user[cols]
+        fig = px.box(df_plot,x=cols[0],y=cols[1])
+        fig.update_layout(yaxis_range=[0, 80])
 
+    st.plotly_chart(fig, use_container_width=True)
 
 st.title("Consultar Anime")
 anime = st.selectbox("Selecione o anime: ", df_anime['anime_title'])
@@ -54,11 +54,11 @@ if anime:
     st.write(f"Número de votos: {float(anime_info.iloc[0]['Scored By']):.0f}")
 
     #Selecionando apenas os usuários que assistem esse anime
-    test = df_userscore[df_userscore["anime_title"] == anime_info.iloc[0]['anime_title']]
+    userscore = df_userscore[df_userscore["anime_title"] == anime_info.iloc[0]['anime_title']]
     #selecionando as informações dos usuários que assistem o anime
-    test2 = pd.merge(df_user, test, how='inner', on=['Username'])
+    usersinfo = pd.merge(df_user, userscore, how='inner', on=['Username'])
     #criando um boxplot pra cada usuário
-    boxplot(test2)
+    boxplot(usersinfo)
 
 else:
     st.write("Selecione um anime")
