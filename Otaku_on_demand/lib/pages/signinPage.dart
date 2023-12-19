@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:otaku_on_demand/pages/signupPage.dart';
-import 'package:otaku_on_demand/pages/startPage.dart';
+import 'package:otaku_on_demand/pages/feedPage.dart';
 import 'package:otaku_on_demand/pages/forgotPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,11 +113,25 @@ class _SignInPageState extends State<SignInPage> {
                               color: Colors.white,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
+                      //resultado do butão login
                       onPressed: () {
+                        try {
+                          _firebase.signInWithEmailAndPassword(
+                              email: emailController.text,
+                              password: senhaController.text);
+                        } on FirebaseAuthException catch (error) {
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  error.message ?? 'Falha ao fazer o login.'),
+                            ),
+                          );
+                        }
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => StartPage()));
+                                builder: (context) => FeedPage()));
                       },
                     ),
                   ),
@@ -136,23 +150,10 @@ class _SignInPageState extends State<SignInPage> {
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
                       onPressed: () {
-                        try {
-                          _firebase.signInWithEmailAndPassword(
-                              email: emailController.text,
-                              password: senhaController.text);
-                        } on FirebaseAuthException catch (error) {
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  error.message ?? 'Falha ao fazer o login.'),
-                            ),
-                          );
-                        }
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => StartPage()));
+                                builder: (context) => SignUpPage()));
                       },
                     ),
                   )

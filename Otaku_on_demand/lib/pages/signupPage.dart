@@ -82,7 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "O nome pode ter no máximo 18 caracteres";
                           }
 
-                          _salvarnome = value!;
+                          //_salvarnome = value!;
 
                           return null;
                         }, // FormValidation

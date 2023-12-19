@@ -27,14 +27,13 @@ class _AboutPageState extends State<AboutPage> {
                   Container(
                     height: 30,
                     width: 30,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage(
-                              "assets/images/logotipo.jpg",
-                            ),
-                            fit: BoxFit.fill)),
                   ),
-                  Text(
+                      Image.asset(
+                        'assets/images/logotipo.png',
+                        fit: BoxFit.contain,
+                        height: 96,
+                      ),
+                      Text(
                     "Otaku on demand",
                     style: const TextStyle(
                       color: Colors.black,
@@ -45,7 +44,7 @@ class _AboutPageState extends State<AboutPage> {
                   SizedBox(height: 15),
                   Text('Versão 1.0',
                       style: const TextStyle(
-                        color: Color(0xff29af6f),
+                        color: Color(0xff156f43),
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       )),
