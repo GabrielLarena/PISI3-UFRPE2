@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:otaku_on_demand/pages/homePage.dart';
 import 'package:otaku_on_demand/pages/aboutPage.dart';
+import 'package:otaku_on_demand/pages/listPage.dart';
+import 'package:otaku_on_demand/model/animes.dart';
+import 'package:otaku_on_demand/pages/itemPage.dart';
 import 'package:otaku_on_demand/pages/signupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +18,7 @@ class _FeedPageState extends State<FeedPage> {
   int myIndex = 0;
   List<Widget> widgetList = [
     HomePage(),
-    AboutPage(),
+    ListPage(),
   ];
 
   @override

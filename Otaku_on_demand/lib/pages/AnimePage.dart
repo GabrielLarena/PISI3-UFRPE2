@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(width: 20), // Espaçamento entre a imagem/botões e o texto
                 // Coluna com o texto
-                const Expanded(
+                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Parte da esquerda
-                  const Column(
+                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -170,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black,
                   ),
                   // Parte do meio
-                  const Column(
+                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -197,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black,
                   ),
                   // Parte da direita
-                  const Column(
+                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
