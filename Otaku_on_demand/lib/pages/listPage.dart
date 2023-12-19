@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:otaku_on_demand/model/animes.dart';
+import 'package:otaku_on_demand/pages/itemPage.dart';
+
+class ListPage extends StatefulWidget {
+  @override
+  _ListPageState createState() => _ListPageState();
+}
+
+
+
+class _ListPageState extends State<ListPage> {
+  //const ListPage({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Listas'),
+      ),
+      body: ListView.builder(
+          itemCount: animeList.length,
+          itemBuilder: (context, index) {
+            AnimeList anime = animeList[index];
+            return Card(
+              child: ListTile(
+                title: Text(anime.title),
+                trailing: Icon(Icons.arrow_forward_rounded),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ItemPage()
+                    )
+                  );
+                },
+              ),
+            );
+          }
+        ),
+    );
+  }
+}
