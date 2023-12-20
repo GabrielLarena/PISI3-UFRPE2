@@ -1,25 +1,28 @@
-import streamlit as st
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+import numpy as np
+import streamlit as st
 import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.graph_objects as go
 
-# Load Parquet file
-df = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
+df_anime = pd.read_parquet("data/preprocessamento/AnimeList.parquet")
 
-# Filter out rows with score equal to 0
-new_df = df[df['score'] != 0]
+st.title("Heatmap")
 
-column_name = 'score'
+# Arrendodando as notas
+df_anime['Score'] = df_anime['Score'].astype(float).round()
 
-# Main content
-st.title("Analise de notas")
+# tirando os 0s
+new_df = df_anime[df_anime['Score'] != 0]
 
-# KDE plot using Plotly Express
-fig = px.histogram(new_df, x=column_name, marginal="kde", nbins=30, title=f"KDE Plot dos {column_name}")
-st.plotly_chart(fig)
+#heatmap
+heatmap_data = new_df.groupby(['Genre', 'Score']).size().unstack(fill_value=0)
+plt.figure(figsize=(43, 10))
+sns.heatmap(heatmap_data, cmap='viridis', annot=True, fmt='d', linewidth=1, linecolor='white')
 
-# Additional information or analysis (optional)
-st.write("Informação adicional:")
-st.write(f"Mean {column_name}: {new_df[column_name].mean()}")
-st.write(f"Median {column_name}: {new_df[column_name].median()}")
+plt.xlabel('Nota')
+plt.ylabel("genero")
+plt.title(f'Heatmap')
+
+plt.show()
