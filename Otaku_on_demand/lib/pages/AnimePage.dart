@@ -35,9 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('SPY x FAMILY'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Adicione aqui a lógica para voltar à tela anterior
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Padding(

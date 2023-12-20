@@ -5,7 +5,7 @@ import 'package:otaku_on_demand/pages/aboutPage.dart';
 import 'package:otaku_on_demand/pages/listPage.dart';
 import 'package:otaku_on_demand/model/animes.dart';
 import 'package:otaku_on_demand/pages/itemPage.dart';
-import 'package:otaku_on_demand/pages/signupPage.dart';
+import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,11 +26,18 @@ class _FeedPageState extends State<FeedPage> {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 218, 216, 216),
       appBar: AppBar(
-        leading: Image.asset(
+        leading: GestureDetector(
+         onTap: () {
+         // Handle the onTap action here
+         Navigator.push(
+         context,
+          MaterialPageRoute(
+           builder: (context) => StartPage()));
+           }, child: Image.asset(
           'assets/images/logotipo.png',
           fit: BoxFit.contain,
           height: 32,
-        ),
+        ),),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -56,7 +63,9 @@ class _FeedPageState extends State<FeedPage> {
         child: widgetList[myIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        //backgroundColor: ,
+        backgroundColor: Color(0xff9029fb),
+        selectedIconTheme: IconThemeData(color: Colors.white),
+        selectedLabelStyle: TextStyle(color: Colors.white),
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() {
@@ -67,11 +76,11 @@ class _FeedPageState extends State<FeedPage> {
         items: const[
          BottomNavigationBarItem(
              icon: Icon(Icons.home),
-           label: "feed"
+             label: "feed"
          ),
           BottomNavigationBarItem(
               icon: Icon(Icons.list),
-              label: "listas"
+              label: "listas",
           )
         ],
       ),

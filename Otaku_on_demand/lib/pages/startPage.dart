@@ -22,18 +22,14 @@ class _StartPageState extends State<StartPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  height: 60,
-                  width: 60,
-                  alignment: Alignment.center,
+                  height: 240,
+                  width: 240,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        //logotipo do aplicativo
-                        "assets/images/logotipo.jpg",
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
+                      image: DecorationImage(
+                          image: AssetImage(
+                            "assets/images/logotipo.png",
+                          ),
+                          fit: BoxFit.fill)),
                 ),
                 Container(
                   alignment: Alignment.center,

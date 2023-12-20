@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/model/animes.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,7 +45,15 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.black , fontSize:20
                                 ),
                               ),
-                              Container(
+                           GestureDetector(
+                            onTap: () {
+                              // Handle the onTap action here
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()));
+                            },
+                            child: Container(
                                 margin: EdgeInsets.all(10),
                                 width: 210,
                                 height: 300,
@@ -56,6 +65,7 @@ class _HomePageState extends State<HomePage> {
                                     fit: BoxFit.cover, // Choose BoxFit as per your requirement
                                   ),
                                 ),),
+                          ),
                             ],
                           )
                       );
@@ -87,7 +97,15 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.black , fontSize:20
                               ),
                             ),
-                            Container(
+                          GestureDetector(
+                            onTap: () {
+                              // Handle the onTap action here
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyHomePage()));
+                            },
+                            child: Container(
                               margin: EdgeInsets.all(10),
                               width: 210,
                               height: 300,
@@ -99,8 +117,61 @@ class _HomePageState extends State<HomePage> {
                                   fit: BoxFit.cover, // Choose BoxFit as per your requirement
                                 ),
                             ),),
+                          ),
                           ],
                         )
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    Text("Recomendados",
+                      style: TextStyle(color: Colors.black , fontSize:25),
+                    ),
+                  ],
+                ),
+
+                Container(
+                  height: 350.0,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: animeItem.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child:Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                animeItem[index].title,
+                                style: TextStyle(
+                                    color: Colors.black , fontSize:20
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // Handle the onTap action here
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyHomePage()));
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  width: 210,
+                                  height: 300,
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: NetworkImage(animeItem[index].imageUrl), // Replace with your image path
+                                      fit: BoxFit.cover, // Choose BoxFit as per your requirement
+                                    ),
+                                  ),),
+                              ),
+                            ],
+                          )
                       );
                     },
                   ),
