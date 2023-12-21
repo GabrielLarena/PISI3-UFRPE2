@@ -32,8 +32,8 @@ List<AnimeItem> animeItem = [
     imageUrl: 'https://cdn.myanimelist.net/images/anime/4/19644.jpg'
   ),
   AnimeItem(
-    title: 'Cowboy Bebop: Tengoku no Tobira',
-    imageUrl: 'https://cdn.myanimelist.net/images/anime/1439/93480.jpg'
+    title: 'SPY X FAMILY',
+    imageUrl: 'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/095217fdb4f228410df09b18f151be28.jpe'
   ),
   AnimeItem(
     title: 'Trigun',

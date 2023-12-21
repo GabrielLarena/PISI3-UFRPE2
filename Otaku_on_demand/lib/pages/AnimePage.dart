@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff9029fb),
         title: const Text('SPY x FAMILY'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

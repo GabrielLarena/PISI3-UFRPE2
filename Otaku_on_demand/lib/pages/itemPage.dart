@@ -11,6 +11,7 @@ class ItemPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff9029fb),
         title: Text('Listas'),
       ),
       body: GridView.builder(

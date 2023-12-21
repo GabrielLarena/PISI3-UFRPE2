@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:otaku_on_demand/pages/startPage.dart';
 
 class ForgotPassword extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           color: Colors.black,
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xff9029fb),
       ),
       body: Padding(
         padding: const EdgeInsets.all(50),
@@ -38,7 +39,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ))),
                     ),
                     const Text(
-                      "Otaku on demand",
+                      "Otaku on\n demand",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 45.0,
@@ -90,7 +91,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: const Color(0xff29af6f),
+                        backgroundColor: const  Color(0xffcc4b00),
                         textStyle: const TextStyle(
                           color: Colors.white,
                           fontStyle: FontStyle.normal,
@@ -131,12 +132,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 width: 150.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StartPage()));
                   },
                   style: ElevatedButton.styleFrom(
+
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
-                      backgroundColor: const Color(0xff29af6f),
+                      backgroundColor: const Color(0xffcc4b00),
                       textStyle: const TextStyle(
                         color: Colors.white,
                         fontStyle: FontStyle.normal,
