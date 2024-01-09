@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:otaku_on_demand/model/animes.dart';
+import 'package:otaku_on_demand/model/animemodel.dart';
 import 'package:otaku_on_demand/pages/itemPage.dart';
 
 class ListPage extends StatefulWidget {
   @override
   _ListPageState createState() => _ListPageState();
 }
-
-
 
 class _ListPageState extends State<ListPage> {
   //const ListPage({super.key});
@@ -23,17 +21,12 @@ class _ListPageState extends State<ListPage> {
                 title: Text(anime.title),
                 trailing: Icon(Icons.arrow_forward_rounded),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ItemPage()
-                    )
-                  );
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ItemPage()));
                 },
               ),
             );
-          }
-        ),
+          }),
     );
   }
 }

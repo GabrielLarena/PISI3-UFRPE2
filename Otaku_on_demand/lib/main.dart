@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:otaku_on_demand/services/firestore.dart';
 import 'firebase_options.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,13 +19,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Otaku on demand",
-      theme: ThemeData(
-        primaryColor: Color.fromARGB(255, 118, 112, 134),
-      ),
-      home: StartPage(),
-    );
+    return MultiProvider(
+        providers: [
+          Provider<FirestoreService>(
+            create: (_) => FirestoreService(),
+          ),
+        ],
+       child: MaterialApp(
+         debugShowCheckedModeBanner: false,
+         title: "Otaku on demand",
+         theme: ThemeData(
+         primaryColor: Color.fromARGB(255, 118, 112, 134),
+         ),
+         home: StartPage(),
+       ),);
   }
 }

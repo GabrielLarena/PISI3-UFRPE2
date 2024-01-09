@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:otaku_on_demand/pages/homePage.dart';
 import 'package:otaku_on_demand/pages/aboutPage.dart';
 import 'package:otaku_on_demand/pages/listPage.dart';
-import 'package:otaku_on_demand/model/animes.dart';
+import 'package:otaku_on_demand/model/animemodel.dart';
 import 'package:otaku_on_demand/pages/itemPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:flutter/material.dart';
@@ -27,22 +27,23 @@ class _FeedPageState extends State<FeedPage> {
       backgroundColor: Color.fromARGB(255, 218, 216, 216),
       appBar: AppBar(
         leading: GestureDetector(
-         onTap: () {
-         // Handle the onTap action here
-         Navigator.push(
-         context,
-          MaterialPageRoute(
-           builder: (context) => StartPage()));
-           }, child: Image.asset(
-          'assets/images/logotipo.png',
-          fit: BoxFit.contain,
-          height: 32,
-        ),),
+          onTap: () {
+            // Handle the onTap action here
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => StartPage()));
+          },
+          child: Image.asset(
+            'assets/images/logotipo.png',
+            fit: BoxFit.contain,
+            height: 32,
+          ),
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                padding: const EdgeInsets.all(8.0), child: Text('Otaku on Demand')),
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Otaku on Demand')),
           ],
         ),
         actions: [
@@ -50,12 +51,10 @@ class _FeedPageState extends State<FeedPage> {
             icon: const Icon(Icons.search),
             // botar pesquisa de anime
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AboutPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AboutPage()));
             },
-            ),
+          ),
         ],
         backgroundColor: Color(0xff9029fb),
       ),
@@ -73,18 +72,14 @@ class _FeedPageState extends State<FeedPage> {
           });
         },
         currentIndex: myIndex,
-        items: const[
-         BottomNavigationBarItem(
-             icon: Icon(Icons.home),
-             label: "feed"
-         ),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "feed"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.list),
-              label: "listas",
+            icon: Icon(Icons.list),
+            label: "listas",
           )
         ],
       ),
     );
   }
 }
-
