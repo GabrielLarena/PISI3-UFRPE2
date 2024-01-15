@@ -10,7 +10,7 @@ class FirestoreService {
 
   Stream<List<Map<String, dynamic>>> getDocumentStream(int batchSize, DocumentSnapshot? lastDocument) {
     Query query = animes
-        .orderBy('anime_id')  // Add an ordering field
+        .orderBy('Score')  // Add an ordering field
         .limit(batchSize);
 
     if (lastDocument != null) {
@@ -39,12 +39,12 @@ class FirestoreService {
 
 
   // CREATE: add anime novo
-  Future<void> AnimeAdd(String anime) async {
+  Future<void> animeAdd(String addname, String addimageURL) async {
     final docAnime = FirebaseFirestore.instance.collection('animes').doc();
 
     final anime = AnimeItem(
-      name: 'Name',
-      imageURL: 'ImageURL',
+      name: addname,
+      imageURL: addimageURL,
     );
 
     final json = anime.toJson();
@@ -53,17 +53,18 @@ class FirestoreService {
   // READ: ler lista de animes
 
   // UPDATE: update um anime pelo ID
-  Future<void> AnimeUpdate(String anime) async {
+  Future<void> animeUpdate(String anime,String anime_id,String update,String changeTo) async {
     final animeUpdate = FirebaseFirestore.instance.collection('animeItem').doc(
-        'anime_id');
+        anime_id);
     animeUpdate.update({
-      'Name': 'nome novo',
+      update: changeTo,
+      //'Nome' = 'novo nome'
     });
   }
   // DELETE: deletar um anime pelo ID
-  Future<void> AnimeDelete(String anime) async {
+  Future<void> animeDelete(String anime,String anime_id) async {
     final animeDelete = FirebaseFirestore.instance.collection('animeItem').doc(
-        'anime_id');
+        anime_id);
     animeDelete.delete();
   }
 
