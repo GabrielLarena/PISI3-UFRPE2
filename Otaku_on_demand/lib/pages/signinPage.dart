@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:otaku_on_demand/pages/signupPage.dart';
 import 'package:otaku_on_demand/pages/feedPage.dart';
 import 'package:otaku_on_demand/pages/forgotPassword.dart';
@@ -109,8 +107,8 @@ class _SignInPageState extends State<SignInPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
                           backgroundColor: Color(0xffcc4b00),
+                          foregroundColor: Colors.white,
                           textStyle: const TextStyle(
-                              color: Colors.white,
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
                       //resultado do butão login
@@ -145,8 +143,8 @@ class _SignInPageState extends State<SignInPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           backgroundColor: Color(0xff9029fb),
+                          foregroundColor: Colors.white,
                           textStyle: const TextStyle(
-                              color: Color(0xff156f43),
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
                       onPressed: () {

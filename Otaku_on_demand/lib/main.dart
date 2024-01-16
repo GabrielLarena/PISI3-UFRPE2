@@ -28,9 +28,6 @@ class MyApp extends StatelessWidget {
        child: MaterialApp(
          debugShowCheckedModeBanner: false,
          title: "Otaku on demand",
-         theme: ThemeData(
-         primaryColor: Color.fromARGB(255, 118, 112, 134),
-         ),
          home: StartPage(),
        ),);
   }

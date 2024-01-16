@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:otaku_on_demand/pages/homePage.dart';
 import 'package:otaku_on_demand/pages/aboutPage.dart';
 import 'package:otaku_on_demand/pages/listPage.dart';
-import 'package:otaku_on_demand/model/animemodel.dart';
-import 'package:otaku_on_demand/pages/itemPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:otaku_on_demand/pages/userPage.dart';
 
 class FeedPage extends StatefulWidget {
   @override
@@ -19,6 +15,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Widget> widgetList = [
     HomePage(),
     ListPage(),
+    UserPage(),
   ];
 
   @override
@@ -62,9 +59,10 @@ class _FeedPageState extends State<FeedPage> {
         child: widgetList[myIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xff9029fb),
-        selectedIconTheme: IconThemeData(color: Colors.white),
-        selectedLabelStyle: TextStyle(color: Colors.white),
+        backgroundColor: Color(0xffb58ff8),
+        selectedItemColor: Colors.white,
+        selectedIconTheme: const IconThemeData(color: Colors.white),
+        selectedLabelStyle: const TextStyle(color: Colors.white),
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           setState(() {
@@ -74,10 +72,8 @@ class _FeedPageState extends State<FeedPage> {
         currentIndex: myIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "feed"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "listas",
-          )
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: "listas", ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Usuário",)
         ],
       ),
     );

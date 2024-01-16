@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const Change());
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Change extends StatelessWidget {
+  const Change({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Meu App Flutter',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple, // Define a cor principal como roxo
-      ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }

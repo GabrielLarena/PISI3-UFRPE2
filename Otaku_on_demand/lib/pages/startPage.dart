@@ -72,8 +72,8 @@ class _StartPageState extends State<StartPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         backgroundColor: Color(0xffcc4b00),
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.bold)),
@@ -97,8 +97,8 @@ class _StartPageState extends State<StartPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         backgroundColor: Color(0xffcc4b00),
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.bold)),
@@ -122,8 +122,8 @@ class _StartPageState extends State<StartPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         backgroundColor: Color(0xff9029fb),
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.bold)),

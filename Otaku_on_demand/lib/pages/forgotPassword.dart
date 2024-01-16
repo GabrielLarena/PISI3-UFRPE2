@@ -91,7 +91,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: const  Color(0xffcc4b00),
+                        backgroundColor: const Color(0xffcc4b00),
                         textStyle: const TextStyle(
                           color: Colors.white,
                           fontStyle: FontStyle.normal,
@@ -132,13 +132,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 width: 150.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StartPage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => StartPage()));
                   },
                   style: ElevatedButton.styleFrom(
-
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                       backgroundColor: const Color(0xffcc4b00),
@@ -153,7 +150,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
           ],
         );
-        ;
       },
     );
   }

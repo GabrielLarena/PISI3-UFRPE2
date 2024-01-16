@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:otaku_on_demand/pages/signinPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -168,8 +167,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
                               backgroundColor: Color(0xffcc4b00),
+                              foregroundColor: Colors.white,
                               textStyle: const TextStyle(
-                                  color: Colors.white,
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.bold)),
                           onPressed: () {
@@ -178,15 +177,18 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
 
                             //firebase salvando email e senha, procurar como salvar nome do usuario depois
-                            try{
-                              _firebase.createUserWithEmailAndPassword(email: _salvaremail, password: _salvarsenha);
+                            try {
+                              _firebase.createUserWithEmailAndPassword(
+                                  email: _salvaremail, password: _salvarsenha);
                             } on FirebaseAuthException catch (error) {
                               ScaffoldMessenger.of(context).clearSnackBars();
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message ?? 'Falha ao salvar.'),
-                              ),
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text(error.message ?? 'Falha ao salvar.'),
+                                ),
                               );
-
-                            }// FormValidation
+                            } // FormValidation
 
                             Navigator.push(
                                 context,
