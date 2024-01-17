@@ -1,18 +1,19 @@
 import 'package:otaku_on_demand/pages/signinPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 final _firebase = FirebaseAuth.instance;
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController _senha = TextEditingController();
-  TextEditingController _confirmarsenha =
+  final TextEditingController _senha = TextEditingController();
+  final TextEditingController _confirmarsenha =
       TextEditingController(); // PasswordValidation
 
   //var _salvarnome = '';
@@ -23,17 +24,17 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xfff2f2f2),
+        backgroundColor: const Color(0xfff2f2f2),
         appBar: AppBar(
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () => Navigator.of(context).pop(),
           ),
           backgroundColor: Colors.white,
         ),
         body: Padding(
-          padding: EdgeInsets.all(50),
+          padding: const EdgeInsets.all(50),
           child: Center(
             child: SingleChildScrollView(
               child: Form(
@@ -44,32 +45,32 @@ class _SignUpPageState extends State<SignUpPage> {
                       Container(
                         height: 30,
                         width: 30,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
                                   "assets/images/logotipo.jpg",
                                 ),
                                 fit: BoxFit.fill)),
                       ),
-                      Text(
+                      const Text(
                         "Otaku on demand",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Text('Cadastro',
-                          style: const TextStyle(
+                      const SizedBox(height: 20),
+                      const Text('Cadastro',
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                           )),
-                      Divider(),
+                      const Divider(),
                       TextFormField(
                         autofocus: true,
                         keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Nome Completo",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -86,13 +87,13 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         }, // FormValidation
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
                         autofocus: true,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Email",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -111,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         }, // FormValidation
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -119,7 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         autofocus: true,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Senha",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -136,13 +137,13 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         }, // FormValidation ,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       TextFormField(
                         controller: _confirmarsenha,
                         autofocus: true,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Confirmar Senha",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -157,16 +158,15 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         }, // FormValidation ,
                       ),
-                      SizedBox(height: 30),
-                      Container(
+                      const SizedBox(height: 30),
+                      SizedBox(
                         height: 50.0,
                         width: 230.0,
                         child: ElevatedButton(
-                          child: Text('Cadastrar'),
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
-                              backgroundColor: Color(0xffcc4b00),
+                              backgroundColor: const Color(0xffcc4b00),
                               foregroundColor: Colors.white,
                               textStyle: const TextStyle(
                                   fontStyle: FontStyle.normal,
@@ -193,8 +193,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignInPage()));
+                                    builder: (context) => const SignInPage()));
                           },
+                          child: const Text('Cadastrar'),
                         ),
                       ),
                     ]),

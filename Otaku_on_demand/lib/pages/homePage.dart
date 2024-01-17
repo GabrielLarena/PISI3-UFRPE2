@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/pages/listProvider.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
@@ -34,68 +33,12 @@ class HomePageList extends StatefulWidget {
 }
 
 class _HomePageListState extends State<HomePageList> {
-  final ScrollController _scrollController = ScrollController();
-  final int initialBatchSize = 16;
   bool isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-    _loadInitialData();
-  }
-
-  void _loadInitialData() async {
-    setState(() {
-      isLoading = true;
-    });
-    List<Map<String, dynamic>> initialData = await FirestoreService()
-        .getDocumentStream(initialBatchSize, null)
-        .first;
-    context.read<ListProvider>().addLoadedItems(initialData);
-    setState(() {
-      isLoading = false;
-    });
-  }
-
-  void _onScroll() async {
-    //double threshold = 400.0; // Adjust the threshold as needed
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent / 2 &&
-        !isLoading) {
-      // Load more items when close to the end
-      setState(() {
-        isLoading = true;
-      });
-      await _loadMoreData();
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  _loadMoreData() async {
-    List<Map<String, dynamic>> loadedItems =
-        context.read<ListProvider>().loadedItems;
-
-    DocumentSnapshot? lastDocument = loadedItems.isNotEmpty
-        ? (loadedItems.last['_documentSnapshot'] as DocumentSnapshot)
-        : null;
-
-    List<Map<String, dynamic>> moreData = await FirestoreService()
-        .getDocumentStream(initialBatchSize, lastDocument)
-        .first;
-
-    // Remove duplicates by checking if the document ID already exists
-    moreData.removeWhere((newItem) => loadedItems.any((existingItem) =>
-        newItem['_documentSnapshot'].id ==
-        existingItem['_documentSnapshot'].id));
-
-    context.read<ListProvider>().addLoadedItems(moreData);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var firestoreService = Provider.of<FirestoreService>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,17 +57,26 @@ class _HomePageListState extends State<HomePageList> {
             ),
           ],
         ),
-        SizedBox(
-          height: 350.0,
-          child: Consumer<ListProvider>(
-            builder: (context, listProvider, child) {
-              return ListView.builder(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                itemCount:
-                    listProvider.loadedItems.length + (isLoading ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index < listProvider.loadedItems.length) {
+        FutureBuilder<List<Map<String, dynamic>>>(
+          future: firestoreService.getDocuments(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // mostrar carregando
+              isLoading = true;
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              isLoading = false;
+              return Text('Error: ${snapshot.error}');
+            } else {
+              isLoading = false;
+              List<Map<String, dynamic>> documents = snapshot.data!;
+
+              return SizedBox(
+                height: 350.0,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: documents.length,
+                  itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Column(
@@ -133,9 +85,11 @@ class _HomePageListState extends State<HomePageList> {
                           SizedBox(
                             width: 210,
                             child: Text(
-                              ('${listProvider.loadedItems[index]['Score']}'),
+                              ('${documents[index]['Name']}'),
                               style: const TextStyle(
-                                  color: Colors.black, fontSize: 20),
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
@@ -146,7 +100,9 @@ class _HomePageListState extends State<HomePageList> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MyHomePage(),
+                                  builder: (context) => const MyHomePage(
+                                    //animeItem: AnimeItem.fromMap(documents[index]),
+                                  ),
                                 ),
                               );
                             },
@@ -159,7 +115,7 @@ class _HomePageListState extends State<HomePageList> {
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
                                   image: NetworkImage(
-                                    ('${listProvider.loadedItems[index]['Image URL']}'),
+                                    ('${documents[index]['Image URL']}'),
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -169,29 +125,13 @@ class _HomePageListState extends State<HomePageList> {
                         ],
                       ),
                     );
-                  } else {
-                    return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        children: [
-                          // Loading indicator while more items are being loaded
-                          CircularProgressIndicator(),
-                        ],
-                      ),
-                    );
-                  }
-                },
+                  },
+                ),
               );
-            },
-          ),
+            }
+          },
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }

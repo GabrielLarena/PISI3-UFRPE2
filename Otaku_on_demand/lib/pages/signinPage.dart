@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 final _firebase = FirebaseAuth.instance;
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -20,16 +22,17 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xfff2f2f2),
+        backgroundColor: const Color(0xfff2f2f2),
         appBar: AppBar(
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () => Navigator.of(context).pop(),
           ),
           backgroundColor: Colors.white,
         ),
         body: Padding(
+          padding: const EdgeInsets.all(50),
           child: Center(
             child: SingleChildScrollView(
                 child: Column(
@@ -38,39 +41,39 @@ class _SignInPageState extends State<SignInPage> {
                   Container(
                     height: 60,
                     width: 60,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage(
                               "assets/images/logotipo.png",
                             ),
                             fit: BoxFit.fill)),
                   ),
-                  Text(
+                  const Text(
                     "Otaku on \n demand",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
                       fontSize: 45.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text('Login',
-                      style: const TextStyle(
+                  const SizedBox(height: 20),
+                  const Text('Login',
+                      style: TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                       )),
-                  Divider(),
+                  const Divider(),
                   TextFormField(
                     autofocus: true,
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         labelText: "Email",
                         labelStyle: TextStyle(
                             color: Color.fromRGBO(30, 30, 30, 100),
                             fontSize: 20)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextFormField(
@@ -78,45 +81,47 @@ class _SignInPageState extends State<SignInPage> {
                     controller: senhaController,
                     keyboardType: TextInputType.text,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         labelText: "Senha",
                         labelStyle: TextStyle(
                             color: Color.fromRGBO(30, 30, 30, 100),
                             fontSize: 20)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
-                  new GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgotPassword()));
+                              builder: (context) => const ForgotPassword()));
                     },
-                    child: Text("Esqueceu a senha?",
-                        style: const TextStyle(color: Color(0xffcc4b00))),
+                    child: const Text("Esqueceu a senha?",
+                        style: TextStyle(color: Color(0xffcc4b00))),
                   ),
-                  SizedBox(height: 30),
-                  Container(
+                  const SizedBox(height: 30),
+                  SizedBox(
                     height: 50.0,
                     width: 230.0,
                     child: ElevatedButton(
-                      child: Text('Login'),
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
-                          backgroundColor: Color(0xffcc4b00),
+                          backgroundColor: const Color(0xffcc4b00),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
                       //resultado do butão login
-                      onPressed: () {
+                      onPressed: () async {
+                        UserCredential? userCredential;
+
                         try {
-                          _firebase.signInWithEmailAndPassword(
-                              email: emailController.text,
-                              password: senhaController.text);
+                          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: senhaController.text,
+                          );
                         } on FirebaseAuthException catch (error) {
                           ScaffoldMessenger.of(context).clearSnackBars();
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -126,23 +131,26 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           );
                         }
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => FeedPage()));
+
+                        if (userCredential?.user != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const FeedPage()));
+                        }
                       },
+                      child: const Text('Login'),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Container(
+                  const SizedBox(height: 20),
+                  SizedBox(
                     height: 40,
                     width: 150,
                     child: ElevatedButton(
-                      child: Text('Cadastre-se'),
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          backgroundColor: Color(0xff9029fb),
+                          backgroundColor: const Color(0xff9029fb),
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontStyle: FontStyle.normal,
@@ -151,13 +159,13 @@ class _SignInPageState extends State<SignInPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignUpPage()));
+                                builder: (context) => const SignUpPage()));
                       },
+                      child: const Text('Cadastre-se'),
                     ),
                   )
                 ])),
           ),
-          padding: EdgeInsets.all(50),
         ));
   }
 }

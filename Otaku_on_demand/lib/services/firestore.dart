@@ -7,31 +7,11 @@ class FirestoreService {
   final CollectionReference animes =
       FirebaseFirestore.instance.collection('animeItem');
 
-  Stream<List<Map<String, dynamic>>> getDocumentStream(
-      int batchSize, DocumentSnapshot? lastDocument) {
-    Query query = animes
-        .orderBy('anime_id') // Add an ordering field
-        .limit(batchSize);
-
-    if (lastDocument != null) {
-      query = query.startAfterDocument(lastDocument);
-    }
-
-    return query.snapshots().map((querySnapshot) {
-      final List<Map<String, dynamic>> result = [];
-      for (final doc in querySnapshot.docs) {
-        result.add({
-          '_documentSnapshot': doc,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }
-
-      if (result.isNotEmpty) {
-        lastDocument = querySnapshot.docs.last;
-      }
-
-      return result;
-    });
+  Future<List<Map<String, dynamic>>> getDocuments() async {
+    QuerySnapshot querySnapshot = await animes.get();
+    return querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
   }
 
   // CREATE: add anime novo
@@ -73,9 +53,9 @@ class FirestoreService {
 
   // UPDATE: update um anime pelo ID
   Future<void> animeUpdate(
-      String anime, String anime_id, String update, String changeTo) async {
+      String anime, String animeId, String update, String changeTo) async {
     final animeUpdate =
-        FirebaseFirestore.instance.collection('animeItem').doc(anime_id);
+        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
     animeUpdate.update({
       update: changeTo,
       //'Nome' = 'novo nome'
@@ -83,9 +63,9 @@ class FirestoreService {
   }
 
   // DELETE: deletar um anime pelo ID
-  Future<void> animeDelete(String anime, String anime_id) async {
+  Future<void> animeDelete(String anime, String animeId) async {
     final animeDelete =
-        FirebaseFirestore.instance.collection('animeItem').doc(anime_id);
+        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
     animeDelete.delete();
   }
 }

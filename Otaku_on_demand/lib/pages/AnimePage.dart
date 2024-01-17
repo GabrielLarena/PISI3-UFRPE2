@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff9029fb),
+        backgroundColor: const Color(0xff9029fb),
         title: const Text('SPY x FAMILY'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 const SizedBox(width: 20), // Espaçamento entre a imagem/botões e o texto
                 // Coluna com o texto
-                 Expanded(
+                 const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Parte da esquerda
-                   Column(
+                   const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black,
                   ),
                   // Parte do meio
-                   Column(
+                   const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
@@ -193,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black,
                   ),
                   // Parte da direita
-                   Column(
+                   const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(

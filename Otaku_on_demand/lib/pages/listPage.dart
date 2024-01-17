@@ -3,6 +3,8 @@ import 'package:otaku_on_demand/model/animemodel.dart';
 import 'package:otaku_on_demand/pages/itemPage.dart';
 
 class ListPage extends StatefulWidget {
+  const ListPage({super.key});
+
   @override
   _ListPageState createState() => _ListPageState();
 }
@@ -19,10 +21,10 @@ class _ListPageState extends State<ListPage> {
             return Card(
               child: ListTile(
                 title: Text(anime.title),
-                trailing: Icon(Icons.arrow_forward_rounded),
+                trailing: const Icon(Icons.arrow_forward_rounded),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ItemPage()));
+                      MaterialPageRoute(builder: (context) => const ItemPage()));
                 },
               ),
             );

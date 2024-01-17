@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 
 class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key});
+
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
@@ -10,14 +12,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff2f2f2),
+      backgroundColor: const Color(0xfff2f2f2),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Color(0xff9029fb),
+        backgroundColor: const Color(0xff9029fb),
       ),
       body: Padding(
         padding: const EdgeInsets.all(50),
@@ -84,7 +86,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 const SizedBox(
                   height: 50,
                 ),
-                Container(
+                SizedBox(
                   height: 50.0,
                   width: 230.0,
                   child: ElevatedButton(
@@ -127,13 +129,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               textAlign: TextAlign.center),
           actions: <Widget>[
             Center(
-              child: Container(
+              child: SizedBox(
                 height: 50.0,
                 width: 150.0,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => StartPage()));
+                        MaterialPageRoute(builder: (context) => const StartPage()));
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

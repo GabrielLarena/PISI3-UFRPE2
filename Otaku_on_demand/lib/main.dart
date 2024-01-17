@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             create: (_) => FirestoreService(),
           ),
         ],
-       child: MaterialApp(
+       child: const MaterialApp(
          debugShowCheckedModeBanner: false,
          title: "Otaku on demand",
          home: StartPage(),

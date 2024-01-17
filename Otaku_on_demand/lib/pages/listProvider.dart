@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ListProvider extends ChangeNotifier {
-  List<Map<String, dynamic>> _loadedItems = [];
+  final List<Map<String, dynamic>> _loadedItems = [];
 
   List<Map<String, dynamic>> get loadedItems => _loadedItems;
 
