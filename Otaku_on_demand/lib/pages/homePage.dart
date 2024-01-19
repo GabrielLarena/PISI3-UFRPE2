@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/pages/listProvider.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
+import 'package:otaku_on_demand/model/animemodel.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -96,13 +97,13 @@ class _HomePageListState extends State<HomePageList> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Handle the onTap action here
+                              // mandar informação do anime
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const MyHomePage(
-                                    //animeItem: AnimeItem.fromMap(documents[index]),
-                                  ),
+                                  builder: (context) => MyHomePage(
+                                      animeItem:
+                                          AnimeItem.fromMap(documents[index])),
                                 ),
                               );
                             },

@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
-
-void main() => runApp(const Change());
-
-class Change extends StatelessWidget {
-  const Change({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Meu App Flutter',
-      home: MyHomePage(),
-    );
-  }
-}
+import 'package:otaku_on_demand/model/animemodel.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final AnimeItem animeItem;
+
+  const MyHomePage({required this.animeItem, Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -27,10 +16,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //accessando a informação recebida da outra pagina
+    AnimeItem animeItem = widget.animeItem;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff9029fb),
-        title: const Text('SPY x FAMILY'),
+        title: Text(animeItem.name),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -51,12 +43,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     // Adicionando uma imagem
                     Image.network(
-                      'https://www.crunchyroll.com/imgsrv/display/thumbnail/480x720/catalog/crunchyroll/095217fdb4f228410df09b18f151be28.jpe',
+                      animeItem.imageURL,
                       width: 200,
                       height: 200,
                       alignment: Alignment.centerLeft,
                     ),
-                    const SizedBox(height: 20), // Espaçamento entre a imagem e os botões
+                    const SizedBox(
+                        height: 20), // Espaçamento entre a imagem e os botões
                     // Adicionando botões roxos com ícones laranjas
                     ElevatedButton.icon(
                       onPressed: () {
@@ -89,7 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         backgroundColor: Colors.deepPurple, // Cor de fundo roxa
                       ),
                       icon: Icon(
-                        isInList ? Icons.playlist_add_rounded : Icons.playlist_add_check_rounded,
+                        isInList
+                            ? Icons.playlist_add_rounded
+                            : Icons.playlist_add_check_rounded,
                         color: Colors.orange, // Cor do ícone laranja
                       ),
                       label: const Text(
@@ -99,13 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                const SizedBox(width: 20), // Espaçamento entre a imagem/botões e o texto
+                const SizedBox(
+                    width: 20), // Espaçamento entre a imagem/botões e o texto
                 // Coluna com o texto
-                 const Expanded(
+                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Sinopse',
                         style: TextStyle(
                           fontSize: 18,
@@ -114,12 +110,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Há décadas, as nações de Ostania e Westalis promovem uma guerra fria sem fim. Para investigar os movimentos do presidente de um importante partido político, Westalis mobiliza Twilight, seu melhor agente, a montar uma família falsa e se infiltrar nos eventos sociais promovidos pela escola do filho do político. Mas por um acaso do destino, Twilight acaba adotando Anya, uma jovem com poderes telepáticos, e se "casando" com Yor, uma assassina profissional! Sem saberem das identidades uns dos outros, este trio incomum vai embarcar em aventuras cheias de surpresas para garantir a paz mundial.',
+                         animeItem.synopsis,
                         style: TextStyle(fontSize: 10),
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Gêneros: Ação, Comédia, Aventura',
+                        animeItem.genres,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -127,7 +123,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 20), // Espaçamento entre a seção superior e a barra roxa
+            const SizedBox(
+                height:
+                    20), // Espaçamento entre a seção superior e a barra roxa
             // Barra roxa dividida em três partes
             Container(
               height: 60,
@@ -139,21 +137,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Parte da esquerda
-                   const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.person,
                         color: Colors.black,
                       ),
-                      SizedBox(height: 5),
-                      Text(
+                      const SizedBox(height: 5),
+                      const Text(
                         'Autor',
                         style: TextStyle(color: Colors.white, fontSize: 8),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        'Endou Tatsuya',
+                        animeItem.source,
                         style: TextStyle(color: Colors.white, fontSize: 8),
                         textAlign: TextAlign.left,
                       ),
@@ -166,21 +164,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black,
                   ),
                   // Parte do meio
-                   const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.star,
                         color: Colors.orange,
                       ),
-                      SizedBox(height: 5),
-                      Text(
+                      const SizedBox(height: 5),
+                      const Text(
                         'Nota',
                         style: TextStyle(color: Colors.white, fontSize: 8),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
-                        '7.7',
+                        animeItem.score,
                         style: TextStyle(color: Colors.white, fontSize: 8),
                         textAlign: TextAlign.left,
                       ),
@@ -193,19 +191,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black,
                   ),
                   // Parte da direita
-                   const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '2233',
-                        style: TextStyle(
+                        animeItem.favorites,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Text(
+                      const SizedBox(height: 5),
+                      const Text(
                         'Favoritos',
                         style: TextStyle(color: Colors.white, fontSize: 12),
                       ),

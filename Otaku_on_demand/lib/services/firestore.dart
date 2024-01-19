@@ -18,6 +18,7 @@ class FirestoreService {
   Future<void> animeAdd(String addname, String addimageURL, String addanimeid, String addenglishName,
       String addscore, String addgenres, String addsynopsis, String addtype, String addaired, String addepisodes, String addpremiered, String addsource, String addduration,
       String addrating, String addranked, String addpopularity, String addmembers, String addfavorites, String addwatching, String addcompleted, String addonHold, String adddropped,
+      String addstudios,
     ) async {
     final docAnime = FirebaseFirestore.instance.collection('animes').doc();
 
@@ -44,6 +45,7 @@ class FirestoreService {
       completed: addcompleted,
       onHold: addonHold,
       dropped: adddropped,
+      studios: addstudios
     );
 
     final json = anime.toJson();

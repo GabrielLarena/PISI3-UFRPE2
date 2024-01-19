@@ -117,27 +117,27 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () async {
                         UserCredential? userCredential;
 
-                        try {
-                          UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: emailController.text,
-                            password: senhaController.text,
-                          );
-                        } on FirebaseAuthException catch (error) {
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  error.message ?? 'Falha ao fazer o login.'),
-                            ),
-                          );
-                        }
+                        //try {
+                         // UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            //email: emailController.text,
+                           // password: senhaController.text,
+                         // );
+                        //} on FirebaseAuthException catch (error) {
+                        //  ScaffoldMessenger.of(context).clearSnackBars();
+                         // ScaffoldMessenger.of(context).showSnackBar(
+                         //   SnackBar(
+                         //     content: Text(
+                         //         error.message ?? 'Falha ao fazer o login.'),
+                         //   ),
+                        //  );
+                       // }
 
-                        if (userCredential?.user != null) {
+                        //if (userCredential?.user != null) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const FeedPage()));
-                        }
+                        //}
                       },
                       child: const Text('Login'),
                     ),
