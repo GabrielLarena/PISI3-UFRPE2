@@ -4,8 +4,6 @@ import 'package:otaku_on_demand/pages/forgotPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-final _firebase = FirebaseAuth.instance;
-
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
@@ -16,8 +14,9 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   void _submit() {}
 
-  final emailController = TextEditingController();
-  var senhaController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _senhaController = TextEditingController();
+  final _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +64,7 @@ class _SignInPageState extends State<SignInPage> {
                   const Divider(),
                   TextFormField(
                     autofocus: true,
-                    controller: emailController,
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                         labelText: "Email",
@@ -78,7 +77,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   TextFormField(
                     autofocus: true,
-                    controller: senhaController,
+                    controller: _senhaController,
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     decoration: const InputDecoration(
@@ -114,30 +113,8 @@ class _SignInPageState extends State<SignInPage> {
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold)),
                       //resultado do butão login
-                      onPressed: () async {
-                        UserCredential? userCredential;
-
-                        //try {
-                         // UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            //email: emailController.text,
-                           // password: senhaController.text,
-                         // );
-                        //} on FirebaseAuthException catch (error) {
-                        //  ScaffoldMessenger.of(context).clearSnackBars();
-                         // ScaffoldMessenger.of(context).showSnackBar(
-                         //   SnackBar(
-                         //     content: Text(
-                         //         error.message ?? 'Falha ao fazer o login.'),
-                         //   ),
-                        //  );
-                       // }
-
-                        //if (userCredential?.user != null) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const FeedPage()));
-                        //}
+                      onPressed: () {
+                        login();
                       },
                       child: const Text('Login'),
                     ),
@@ -168,4 +145,29 @@ class _SignInPageState extends State<SignInPage> {
           ),
         ));
   }
+
+  login() async {
+    try{
+      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+          email: _emailController.text, password: _senhaController.text);
+      if (userCredential != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FeedPage()
+            ),
+        );
+      }
+    } on FirebaseAuthException catch (e){
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Email ou senha invalida'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 4),
+            )
+        );
+      }
+
+  }
+
 }

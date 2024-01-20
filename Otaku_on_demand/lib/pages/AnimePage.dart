@@ -22,7 +22,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff9029fb),
-        title: Text(animeItem.name),
+        title: Text(
+          //checa se tme nome em ingles e usa ele se tiver
+          animeItem.englishName != "UNKNOWN"
+              ? animeItem.englishName
+              : animeItem.name,
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -44,8 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     // Adicionando uma imagem
                     Image.network(
                       animeItem.imageURL,
-                      width: 200,
-                      height: 200,
+                      width: 210,
+                      height: 300,
                       alignment: Alignment.centerLeft,
                     ),
                     const SizedBox(
@@ -88,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.orange, // Cor do ícone laranja
                       ),
                       label: const Text(
-                        'Lista      ',
+                        'Lista   ',
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -97,26 +102,26 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                     width: 20), // Espaçamento entre a imagem/botões e o texto
                 // Coluna com o texto
-                 Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Sinopse',
+                        'Sinopse: ',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
-                         animeItem.synopsis,
-                        style: TextStyle(fontSize: 10),
+                        animeItem.synopsis,
+                        style: const TextStyle(fontSize: 10),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
                         animeItem.genres,
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ],
                   ),

@@ -42,12 +42,19 @@ class _FeedPageState extends State<FeedPage> {
           children: [
             Container(
                 padding: const EdgeInsets.all(8.0),
-                child: const Text('Otaku on Demand')),
+                child: const Text('Otaku on Demand',
+                  style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                   ),
+                )
+            ),
           ],
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
+            color: Colors.white,
             // botar pesquisa de anime
             onPressed: () {
               Navigator.push(context,
@@ -61,7 +68,7 @@ class _FeedPageState extends State<FeedPage> {
         child: widgetList[myIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xffb58ff8),
+        backgroundColor: const Color(0xff9029fb),
         selectedItemColor: Colors.white,
         selectedIconTheme: const IconThemeData(color: Colors.white),
         selectedLabelStyle: const TextStyle(color: Colors.white),
