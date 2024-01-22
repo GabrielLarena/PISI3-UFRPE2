@@ -12,8 +12,6 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  void _submit() {}
-
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   final _firebaseAuth = FirebaseAuth.instance;
@@ -147,27 +145,23 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   login() async {
-    try{
-      UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-          email: _emailController.text, password: _senhaController.text);
+    try {
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
+              email: _emailController.text, password: _senhaController.text);
+      // ignore: unnecessary_null_comparison
       if (userCredential != null) {
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => FeedPage()
-            ),
+          context,
+          MaterialPageRoute(builder: (context) => const FeedPage()),
         );
       }
-    } on FirebaseAuthException catch (e){
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email ou senha invalida'),
-              backgroundColor: Colors.red,
-              duration: Duration(seconds: 4),
-            )
-        );
-      }
-
+    } on FirebaseAuthException {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Email ou senha invalida'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 4),
+      ));
+    }
   }
-
 }

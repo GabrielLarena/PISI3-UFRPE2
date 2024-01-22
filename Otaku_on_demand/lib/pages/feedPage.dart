@@ -2,8 +2,9 @@ import 'package:otaku_on_demand/pages/homePage.dart';
 import 'package:otaku_on_demand/pages/aboutPage.dart';
 import 'package:otaku_on_demand/pages/listPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
+import 'package:otaku_on_demand/pages/searchPage.dart';
 import 'package:flutter/material.dart';
-import 'package:otaku_on_demand/pages/userPage.dart';
+import 'package:otaku_on_demand/pages/UserConfig.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -17,7 +18,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Widget> widgetList = [
     const HomePage(),
     const ListPage(),
-    const UserPage(),
+    const MyHomePage(),
   ];
 
   @override
@@ -28,8 +29,8 @@ class _FeedPageState extends State<FeedPage> {
         leading: GestureDetector(
           onTap: () {
             // Handle the onTap action here
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => const StartPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const StartPage()));
           },
           child: Image.asset(
             'assets/images/logotipo.png',
@@ -42,13 +43,13 @@ class _FeedPageState extends State<FeedPage> {
           children: [
             Container(
                 padding: const EdgeInsets.all(8.0),
-                child: const Text('Otaku on Demand',
+                child: const Text(
+                  'Otaku on Demand',
                   style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                   ),
-                )
-            ),
+                    color: Colors.white,
+                    fontSize: 25.0,
+                  ),
+                )),
           ],
         ),
         actions: [
@@ -58,7 +59,7 @@ class _FeedPageState extends State<FeedPage> {
             // botar pesquisa de anime
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AboutPage()));
+                  MaterialPageRoute(builder: (context) => const SearchPage()));
             },
           ),
         ],
@@ -81,8 +82,14 @@ class _FeedPageState extends State<FeedPage> {
         currentIndex: myIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "feed"),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: "listas", ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Usuário",)
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: "listas",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Usuário",
+          )
         ],
       ),
     );

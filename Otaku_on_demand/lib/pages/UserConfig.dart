@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:otaku_on_demand/pages/startPage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -22,17 +24,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Usuário'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Adicionar a lógica para voltar à tela anterior
-          },
-        ),
-      ),
-      body: Container(
+    return Container(
         color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -160,8 +152,7 @@ class MyHomePage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   void _mostrarPopUpDeletar(BuildContext context) {
@@ -173,7 +164,7 @@ class MyHomePage extends StatelessWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Quer mesmo apagar sua conta?'),
+              const Text('Quer mesmo apagar sua conta?\nESSE PROCESSO É IRREVERSIVEL'),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -183,7 +174,8 @@ class MyHomePage extends StatelessWidget {
                       // Lógica para o botão "Sim"
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: const Color(0xFFFF0000),
+                      foregroundColor: Colors.white,
                     ),
                     child: const Text('Sim'),
                   ),
@@ -222,6 +214,11 @@ class MyHomePage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Lógica para o botão "Sim"
+                      FirebaseAuth.instance.signOut();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const StartPage()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
