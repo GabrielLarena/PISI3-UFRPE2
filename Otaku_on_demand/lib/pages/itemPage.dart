@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:otaku_on_demand/model/animemodel.dart';
+//import 'package:otaku_on_demand/model/animemodel.dart';
 import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
@@ -19,31 +19,22 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    var firestoreService = Provider.of<FirestoreService>(context);
+    final firestoreService = Provider.of<FirestoreService>(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff9029fb),
         title: const Text('Lista'),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: firestoreService.getDocuments(),
-        builder: (context, snapshot) {
-         if (snapshot.connectionState == ConnectionState.waiting) {
-          // mostrar carregando
-          return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-             } else {
-              List<Map<String, dynamic>> documents = snapshot.data!;
-               return GridView.builder(
+      body: GridView.builder(
                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                        maxCrossAxisExtent: 220,
                        childAspectRatio: 3 / 2,
                        crossAxisSpacing: 20,
                        mainAxisSpacing: 20),
-                       itemCount: documents.length,
+                       itemCount: firestoreService.animeDataList.length,
                    itemBuilder: (context, index) {
+                     final anime = firestoreService.animeDataList[index];
                      return GestureDetector(
                        onTap: () {
                          // mandar informação do anime
@@ -52,20 +43,17 @@ class _ItemPageState extends State<ItemPage> {
                            MaterialPageRoute(
                              builder: (context) => MyHomePage(
                                  animeItem:
-                                 AnimeItem.fromMap(documents[index])),
+                                 anime),
                            ),
                          );
                        },
                        child: Card(
-                         child: ListTile(title: Text(('${documents[index]['Name']}')),
-                           leading: Image.network( ('${documents[index]['Image URL']}')),
+                         child: ListTile(title: Text(anime.name),
+                           leading: Image.network( anime.imageURL),
                          ),
                        ),
                      );
-                   });
-        }
-         },
-      ),
+                   }),
     );
   }
 }

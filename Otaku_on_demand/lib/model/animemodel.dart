@@ -31,10 +31,7 @@ class AnimeItem {
   final String popularity;
   final String members;
   final String favorites;
-  final String watching;
-  final String completed;
-  final String onHold;
-  final String dropped;
+  final String scoredBy;
   final String studios;
 
   AnimeItem({required this.name,
@@ -55,19 +52,16 @@ class AnimeItem {
     required this.popularity,
     required this.members,
     required this.favorites,
-    required this.watching,
-    required this.completed,
-    required this.onHold,
-    required this.dropped,
+    required this.scoredBy,
     required this.studios,
   });
 
   factory AnimeItem.fromMap(Map<String, dynamic> map) {
     return AnimeItem(
       name: map['Name'] ?? '',
-      englishName: map['English Name'] ?? '',
+      englishName: map['English name'] ?? '',
       imageURL: map['Image URL'] ?? '',
-      score: map['Scores'] ?? '',
+      score: map['Score'] ?? '',
       genres: map['Genres'] ?? '',
       animeid: map['anime_id'] ?? '',
       synopsis: map['Synopsis'] ?? '',
@@ -78,14 +72,11 @@ class AnimeItem {
       source: map['Source'] ?? '',
       duration: map['Duration'] ?? '',
       rating: map['Rating'] ?? '',
-      ranked: map['Ranked'] ?? '',
+      ranked: map['Rank'] ?? '',
       popularity: map['Popularity'] ?? '',
       members: map['Members'] ?? '',
       favorites: map['Favorites'] ?? '',
-      watching: map['Watching'] ?? '',
-      completed: map['Completed'] ?? '',
-      onHold: map['On-Hold'] ?? '',
-      dropped: map['Dropped'] ?? '',
+      scoredBy: map['Scored By'] ?? '',
       studios: map['Studios'] ?? '',
     );
   }
@@ -111,10 +102,7 @@ class AnimeItem {
     'Popularity': popularity,
     'Members': members,
     'Favorites': favorites,
-    'Watching': watching,
-    'Completed': completed,
-    'On-Hold': onHold,
-    'Dropped': dropped,
+    'Scored By': scoredBy,
     'Studios' : studios,
       };
 
@@ -141,10 +129,7 @@ class AnimeItem {
         popularity: json['Popularity'],
         members: json['Members'],
         favorites: json['Favorites'],
-        watching: json['Watching'],
-        completed: json['Completed'],
-        onHold: json['On-Hold'],
-        dropped: json['Dropped'],
+        scoredBy: json['Completed'],
         studios: json['Studios'],
       );
 }
