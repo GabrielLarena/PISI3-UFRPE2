@@ -4,29 +4,18 @@ import 'package:otaku_on_demand/model/animemodel.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService extends ChangeNotifier {
-  List<AnimeItem> animeDataList = [];
-  int batchSize = 50; // Adjust the batch size as needed
-  DocumentSnapshot? lastDocument;
 
-  FirestoreService() {
-    fetchData();
-  }
+      List<AnimeItem> animeDataList = [];
 
-  Future<void> fetchData() async {
-    Query query = FirebaseFirestore.instance.collection('animeItem');
+      Future<void> fetchData() async {
+        // Fetch data from Firebase
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('animeItem')
+            .get();
 
-    if (lastDocument != null) {
-      query = query.startAfterDocument(lastDocument!);
-    }
-
-    QuerySnapshot querySnapshot = await query.limit(batchSize).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      lastDocument = querySnapshot.docs.last;
-
-      // Data firebase para o modelo animeItem
-      List<AnimeItem> newItems = querySnapshot.docs
-          .map((doc) => AnimeItem(
+        // Convert the data to your model
+        animeDataList = querySnapshot.docs
+            .map((doc) => AnimeItem(
                 name: doc['Name'],
                 englishName: doc['English name'],
                 imageURL: doc['Image URL'],
@@ -50,20 +39,19 @@ class FirestoreService extends ChangeNotifier {
               ))
           .toList();
 
-      animeDataList.addAll(newItems);
       notifyListeners();
     }
 
     // pegar banco de dados
-    final CollectionReference animes =
-        FirebaseFirestore.instance.collection('animeItem');
+    //final CollectionReference animes =
+        //FirebaseFirestore.instance.collection('animeItem');
 
-    Future<List<Map<String, dynamic>>> getDocuments() async {
-      QuerySnapshot querySnapshot = await animes.get();
-      return querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-    }
+   // Future<List<Map<String, dynamic>>> getDocuments() async {
+      //QuerySnapshot querySnapshot = await animes.get();
+      //return querySnapshot.docs
+          //.map((doc) => doc.data() as Map<String, dynamic>)
+          //.toList();
+    //}
 
     // CREATE: add anime novo
     Future<void> animeAdd(
@@ -137,5 +125,4 @@ class FirestoreService extends ChangeNotifier {
           FirebaseFirestore.instance.collection('animeTest').doc(animeId);
       animeDelete.delete();
     }
-  }
 }

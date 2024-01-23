@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
 
 class SearchPage extends StatefulWidget {
@@ -39,70 +40,92 @@ class _SearchPageState extends State<SearchPage> {
 
           //resultado vazio
           if (name.isEmpty) {
-            return ListTile(
-              title: Text(
-                anime.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+            return GestureDetector(
+              onTap: () {
+                // mandar informação do anime
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(animeItem: anime),
+                  ),
+                );
+              },
+              child: ListTile(
+                title: Text(
+                  anime.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              subtitle: Text(
-                anime.score,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.black, fontSize: 12),
-              ),
-              leading: Container(
-                margin: const EdgeInsets.all(10),
-                width: 105,
-                height: 150,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      anime.imageURL,
+                subtitle: Text(
+                  anime.score,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.black, fontSize: 12),
+                ),
+                leading: Container(
+                  margin: const EdgeInsets.all(10),
+                  width: 105,
+                  height: 150,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        anime.imageURL,
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             );
           }
           if (anime.name.toLowerCase().contains(name.toLowerCase())) {
-            return ListTile(
-              title: Text(
-                anime.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+            return GestureDetector(
+              onTap: () {
+                // mandar informação do anime
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyHomePage(animeItem: anime),
+                  ),
+                );
+              },
+              child: ListTile(
+                title: Text(
+                  anime.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              subtitle: Text(
-                anime.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.black, fontSize: 12),
-              ),
-              leading: Container(
-                margin: const EdgeInsets.all(10),
-                width: 105,
-                height: 150,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      anime.imageURL,
+                subtitle: Text(
+                  anime.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.black, fontSize: 12),
+                ),
+                leading: Container(
+                  margin: const EdgeInsets.all(10),
+                  width: 105,
+                  height: 150,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        anime.imageURL,
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
               ),

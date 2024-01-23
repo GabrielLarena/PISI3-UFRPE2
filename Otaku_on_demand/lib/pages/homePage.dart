@@ -60,89 +60,65 @@ class _HomePageListState extends State<HomePageList> {
         ),
         SizedBox(
           height: 350.0,
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              //checa se a lista esta na metade
-              if (!isLoading &&
-                  scrollInfo.metrics.pixels >=
-                      scrollInfo.metrics.maxScrollExtent/2) {
-                // carrega mais na lista
-                _loadMoreData(firestoreService);
-                return true;
-              }
-              return false;
-            },
-            child: ListView.builder(
-              controller: ScrollController(),
-              scrollDirection: Axis.horizontal,
-              itemCount: firestoreService.animeDataList.length,
-              itemBuilder: (context, index) {
-                final anime = firestoreService.animeDataList[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
+          child: ListView.builder(
+            controller: ScrollController(),
+            scrollDirection: Axis.horizontal,
+            itemCount: firestoreService.animeDataList.length,
+            itemBuilder: (context, index) {
+              final anime = firestoreService.animeDataList[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 210,
+                      child: Text(
+                        anime.name,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // mandar informação do anime
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MyHomePage(
+                                  animeItem: anime,
+                                ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(10),
                         width: 210,
-                        child: Text(
-                          anime.name,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // mandar informação do anime
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MyHomePage(
-                                animeItem: anime,
-                              ),
+                        height: 300,
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              anime.imageURL,
                             ),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          width: 210,
-                          height: 300,
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                anime.imageURL,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],
     );
   }
-
-  void _loadMoreData(FirestoreService firestoreService) async {
-    setState(() {
-      isLoading = true;
-    });
-
-    await firestoreService.fetchData();
-
-    setState(() {
-      isLoading = false;
-    });
   }
-}
