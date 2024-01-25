@@ -8,12 +8,14 @@ class FirestoreService extends ChangeNotifier {
       List<AnimeItem> animeDataList = [];
 
       Future<void> fetchData() async {
-        // Fetch data from Firebase
+        // pegar data da Firebase
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('animeItem')
+            //teste de limite
+            .limit(8632)
             .get();
 
-        // Convert the data to your model
+        // transformando data em modelo animeItem
         animeDataList = querySnapshot.docs
             .map((doc) => AnimeItem(
                 name: doc['Name'],

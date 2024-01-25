@@ -20,6 +20,11 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Card(
           child: TextField(
             decoration: const InputDecoration(
@@ -108,7 +113,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 subtitle: Text(
-                  anime.name,
+                  anime.score,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: Colors.black, fontSize: 12),

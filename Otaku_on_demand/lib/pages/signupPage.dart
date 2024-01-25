@@ -28,7 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: Colors.black,
+            color: Colors.white,
             onPressed: () => Navigator.of(context).pop(),
           ),
           backgroundColor: Colors.white,
@@ -128,8 +128,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         validator: (value) {
                           if (value != null && value.isEmpty) {
                             return "A senha é obrigatória";
-                          } else if (value != null && value.length < 8) {
-                            return "A senha precisa ter no mínimo 9 caracteres";
+                          } else if (value != null && value.length < 6) {
+                            return "A senha precisa ter no mínimo 6 caracteres";
                           }
 
                           _salvarsenha = value!;

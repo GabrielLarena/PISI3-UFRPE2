@@ -1,5 +1,4 @@
 import 'package:otaku_on_demand/pages/homePage.dart';
-import 'package:otaku_on_demand/pages/aboutPage.dart';
 import 'package:otaku_on_demand/pages/listPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:otaku_on_demand/pages/searchPage.dart';
