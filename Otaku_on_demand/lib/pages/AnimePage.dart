@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/model/animemodel.dart';
+import '../services/favoritosProvider.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   final AnimeItem animeItem;
@@ -11,8 +13,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late FavoritesProvider favoritesProvider;
   bool isFavorite = false;
   bool isInList = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Access the FavoritesProvider
+    favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
+
+    // Check if the animeItem is already in favorites
+    isFavorite = favoritesProvider.favoritesList
+        .any((item) => item.animeid == widget.animeItem.animeid);
+
+    // You can also call getFavorites to ensure the list is up-to-date
+     favoritesProvider.getFavorites();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ElevatedButton.icon(
                         onPressed: () {
                           // Lógica para o botão "Favorito"
+                          if (isFavorite) {
+                            // Remove from favorites
+                            favoritesProvider.removeFromFavorites(widget.animeItem);
+                          } else {
+                            // Add to favorites
+                            favoritesProvider.addToFavorites(widget.animeItem);
+                            print('adicionou');
+                          }
                           setState(() {
                             isFavorite = !isFavorite;
                           });
@@ -74,12 +100,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               Colors.deepPurple, // Cor de fundo roxa
                         ),
                         icon: Icon(
-                          isFavorite ? Icons.favorite_border : Icons.favorite,
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
                           color: Colors.orange, // Cor do ícone laranja
                         ),
-                        label: const Text(
-                          'Favorito',
-                          style: TextStyle(fontSize: 16),
+                        label:  Text(
+                          isFavorite ? 'Remover dos Favoritos' : 'Adicionar aos Favoritos',
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                       const SizedBox(height: 10), // Espaçamento entre os botões
@@ -139,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // Espaçamento entre a seção superior e a barra roxa
               // Barra roxa dividida em três partes
               Container(
-                height: 60,
+                height: 100,
                 decoration: BoxDecoration(
                   color: Colors.deepPurple,
                   borderRadius: BorderRadius.circular(10),
@@ -158,12 +184,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(height: 5),
                         const Text(
                           'Episodios',
-                          style: TextStyle(color: Colors.white, fontSize: 8),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           animeItem.episodes,
-                          style: TextStyle(color: Colors.white, fontSize: 8),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                           textAlign: TextAlign.left,
                         ),
                       ],
@@ -185,12 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SizedBox(height: 5),
                         const Text(
                           'Nota',
-                          style: TextStyle(color: Colors.white, fontSize: 8),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           animeItem.score,
-                          style: TextStyle(color: Colors.white, fontSize: 8),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                           textAlign: TextAlign.left,
                         ),
                       ],
@@ -210,13 +236,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            fontSize: 16,
                           ),
                         ),
                         const SizedBox(height: 5),
                         const Text(
                           'Favoritos',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],
                     ),

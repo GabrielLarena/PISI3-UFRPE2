@@ -1,3 +1,4 @@
+
 class AnimeList {
   String title;
 
@@ -8,8 +9,7 @@ class AnimeList {
 
 List<AnimeList> animeList = [
   AnimeList(title: 'Favoritos'),
-  AnimeList(title: 'Assistidos'),
-  AnimeList(title: 'Ver Depois')
+  AnimeList(title: 'Assistir mais tarde'),
 ];
 
 class AnimeItem {
@@ -27,7 +27,7 @@ class AnimeItem {
   final String source;
   final String duration;
   final String rating;
-  final String ranked;
+  final String rank;
   final String popularity;
   final String members;
   final String favorites;
@@ -48,7 +48,7 @@ class AnimeItem {
     required this.source,
     required this.duration,
     required this.rating,
-    required this.ranked,
+    required this.rank,
     required this.popularity,
     required this.members,
     required this.favorites,
@@ -72,7 +72,7 @@ class AnimeItem {
       source: map['Source'] ?? '',
       duration: map['Duration'] ?? '',
       rating: map['Rating'] ?? '',
-      ranked: map['Rank'] ?? '',
+      rank: map['Rank'] ?? '',
       popularity: map['Popularity'] ?? '',
       members: map['Members'] ?? '',
       favorites: map['Favorites'] ?? '',
@@ -83,27 +83,28 @@ class AnimeItem {
 
   //mapeamento Json para mandar para o databse
   //mudar ao completar a data do anime
-  Map<String, dynamic> toJson() => {
-    'Name': name,
-    'Image URL': imageURL,
-    'English Name': englishName,
-    'Scores': score,
-    'Genres': genres,
-    'anime_id': animeid,
-    'Synopsis': synopsis,
-    'Type': type,
-    'Episodes': episodes,
-    'Aired': aired,
-    'Premiered': premiered,
-    'Source': source,
-    'Duration': duration,
-    'Rating': rating,
-    'Ranked': ranked,
-    'Popularity': popularity,
-    'Members': members,
-    'Favorites': favorites,
-    'Scored By': scoredBy,
-    'Studios' : studios,
+  Map<String, dynamic> toJson() =>
+      {
+        'Name': name,
+        'Image URL': imageURL,
+        'English Name': englishName,
+        'Score': score,
+        'Genres': genres,
+        'anime_id': animeid,
+        'Synopsis': synopsis,
+        'Type': type,
+        'Episodes': episodes,
+        'Aired': aired,
+        'Premiered': premiered,
+        'Source': source,
+        'Duration': duration,
+        'Rating': rating,
+        'Rank': rank,
+        'Popularity': popularity,
+        'Members': members,
+        'Favorites': favorites,
+        'Scored By': scoredBy,
+        'Studios': studios,
       };
 
   //coletar informação do firebase e transformar em
@@ -114,7 +115,7 @@ class AnimeItem {
         name: json['Name'],
         englishName: json['English Name'],
         imageURL: json['Image URL'],
-        score: json['Scores'],
+        score: json['Score'],
         genres: json['Genres'],
         animeid: json['anime_id'],
         synopsis: json['Synopsis'],
@@ -125,13 +126,14 @@ class AnimeItem {
         source: json['Source'],
         duration: json['Duration'],
         rating: json['Rating'],
-        ranked: json['Ranked'],
+        rank: json['Rank'],
         popularity: json['Popularity'],
         members: json['Members'],
         favorites: json['Favorites'],
         scoredBy: json['Completed'],
         studios: json['Studios'],
       );
+
 }
 
 //coletar animes

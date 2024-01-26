@@ -1,6 +1,7 @@
 import 'package:otaku_on_demand/pages/signinPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -16,7 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _confirmarsenha =
       TextEditingController(); // PasswordValidation
 
-  //var _salvarnome = '';
+  var _salvarnome = '';
   var _salvaremail = '';
   var _salvarsenha = '';
 
@@ -82,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "O nome pode ter no máximo 18 caracteres";
                           }
 
-                          //_salvarnome = value!;
+                          _salvarnome = value!;
 
                           return null;
                         }, // FormValidation
@@ -172,11 +173,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.bold)),
                           onPressed: () {
+                            //validação do que foi inserido pelo usuario
                             if (!_formKey.currentState!.validate()) {
                               return;
                             }
 
                             //firebase salvando email e senha, procurar como salvar nome do usuario depois
+                            signUp(_salvaremail, _salvarsenha, _salvarnome);
+
                             try {
                               _firebase.createUserWithEmailAndPassword(
                                   email: _salvaremail, password: _salvarsenha);
@@ -203,5 +207,38 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
         ));
+  }
+
+  void signUp(String salvaremail, String salvarsenha, String salvarnome) async {
+    try {
+      // Create a new user account
+      UserCredential userCredential =
+          await _firebase.createUserWithEmailAndPassword(
+        email: salvaremail,
+        password: salvarsenha,
+      );
+
+      // Access the user and user ID
+      User? user = userCredential.user;
+
+      if (user != null) {
+        String userId = user.uid;
+
+        // Add user information to Firestore "users" collection
+        await FirebaseFirestore.instance.collection('usersList').doc(userId).set({
+          'email': salvaremail,
+          'displayName': salvarnome,
+          'favoritos': [], // Initial empty list for favoritos
+          'assistir_depois': [], // Initial empty list for assistir_depois
+        });
+
+        // The user document is now created in the "users" collection
+        print('User account created with ID: $userId');
+      } else {
+        print('User is null');
+      }
+    } catch (e) {
+      print('Error creating account: $e');
+    }
   }
 }

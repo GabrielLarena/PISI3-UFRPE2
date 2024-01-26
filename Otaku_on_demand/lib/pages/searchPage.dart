@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
 
+import '../services/favoritosProvider.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -17,6 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final firestoreService = Provider.of<FirestoreService>(context);
+    final favoritesProvider = Provider.of<FavoritesProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -56,6 +59,26 @@ class _SearchPageState extends State<SearchPage> {
                 );
               },
               child: ListTile(
+                trailing: IconButton(
+                  icon: Icon(
+                    favoritesProvider.favoritesList
+                        .any((item) => item.animeid == anime.animeid)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: Colors.deepPurple,
+                  ),
+                  onPressed: () {
+                    // Check if the animeItem is already in favorites
+                    if (favoritesProvider.favoritesList
+                        .any((item) => item.animeid == anime.animeid)) {
+                      // Remove from favorites
+                      favoritesProvider.removeFromFavorites(anime);
+                    } else {
+                      // Add to favorites
+                      favoritesProvider.addToFavorites(anime);
+                    }
+                  },
+                ),
                 title: Text(
                   anime.name,
                   maxLines: 1,
@@ -102,6 +125,26 @@ class _SearchPageState extends State<SearchPage> {
                 );
               },
               child: ListTile(
+                trailing: IconButton(
+                  icon: Icon(
+                    favoritesProvider.favoritesList
+                        .any((item) => item.animeid == anime.animeid)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: Colors.deepPurple,
+                  ),
+                  onPressed: () {
+                    // Check if the animeItem is already in favorites
+                    if (favoritesProvider.favoritesList
+                        .any((item) => item.animeid == anime.animeid)) {
+                      // Remove from favorites
+                      favoritesProvider.removeFromFavorites(anime);
+                    } else {
+                      // Add to favorites
+                      favoritesProvider.addToFavorites(anime);
+                    }
+                  },
+                ),
                 title: Text(
                   anime.name,
                   maxLines: 1,
