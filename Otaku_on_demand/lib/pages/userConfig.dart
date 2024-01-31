@@ -25,15 +25,6 @@ class UserConfig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Usuário'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Adicionar a lógica para voltar à tela anterior
-          },
-        ),
-      ),
       body: Container(
         color: Colors.white,
         child: Column(
@@ -224,8 +215,22 @@ class UserConfig extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Lógica para o botão "Sim"
+                      try {
+                        User? user = FirebaseAuth.instance.currentUser;
+                        await user?.delete();
+                      } catch (e) {
+                        const SnackBar(
+                          content: Text('Erro ao deletar conta'),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 4),
+                        );
+                      }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const StartPage()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF0000),

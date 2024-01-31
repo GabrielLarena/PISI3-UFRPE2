@@ -43,8 +43,7 @@ class _HomePageListState extends State<HomePageList> {
     final firestoreService = Provider.of<FirestoreService>(context);
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
 
-    favoritesProvider.getFavorites();
-
+    favoritesProvider.getData();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,8 +51,8 @@ class _HomePageListState extends State<HomePageList> {
         Row(
           children: [
             const Text(
-              "Animes Populares",
-              style: TextStyle(color: Colors.black, fontSize: 25),
+              "ANIMES POPULARES",
+              style: TextStyle(color: Color(0xff9029fb), fontSize: 25, fontWeight: FontWeight.bold,),
             ),
             Visibility(
               visible: isLoading,
@@ -80,7 +79,9 @@ class _HomePageListState extends State<HomePageList> {
                     SizedBox(
                       width: 210,
                       child: Text(
-                        anime.name,
+                        anime.englishName != "UNKNOWN"
+                            ? anime.englishName
+                            : anime.name,
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -95,10 +96,9 @@ class _HomePageListState extends State<HomePageList> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                MyHomePage(
-                                  animeItem: anime,
-                                ),
+                            builder: (context) => AnimeDetailPage(
+                              animeItem: anime,
+                            ),
                           ),
                         );
                       },
@@ -124,11 +124,12 @@ class _HomePageListState extends State<HomePageList> {
             },
           ),
         ),
+        const Divider(),
         Row(
           children: [
             const Text(
-              "Animes Favoritos",
-              style: TextStyle(color: Colors.black, fontSize: 25),
+              "ANIMES FAVORITOS",
+              style: TextStyle(color: Color(0xff9029fb), fontSize: 25,fontWeight: FontWeight.bold,),
             ),
             Visibility(
               visible: isLoading,
@@ -141,70 +142,78 @@ class _HomePageListState extends State<HomePageList> {
         ),
         favoritesProvider.favoritesList.isEmpty
             ? const Center(
-            // Display a message when the favorites list is empty
-             child: Text('Lista de favoritos esta vazia \n Adicione mais animes!'),
-            )
-            :SizedBox(
-            height: 350.0,
-            child: ListView.builder(
-            controller: ScrollController(),
-            scrollDirection: Axis.horizontal,
-            itemCount: favoritesProvider.favoritesList.length,
-            itemBuilder: (context, index) {
-              final anime = favoritesProvider.favoritesList[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 210,
-                      child: Text(
-                        anime.name,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // mandar informação do anime
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MyHomePage(
-                                  animeItem: anime,
-                                ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        width: 210,
-                        height: 300,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              anime.imageURL,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                // Display a message when the favorites list is empty
+                child: Text(
+                  'Lista de favoritos esta vazia \n Adicione mais animes!',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              );
-            },
-          ),
-        ),
+              )
+            : SizedBox(
+                height: 350.0,
+                child: ListView.builder(
+                  controller: ScrollController(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: favoritesProvider.favoritesList.length,
+                  itemBuilder: (context, index) {
+                    final anime = favoritesProvider.favoritesList[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 210,
+                            child: Text(
+                              anime.englishName != "UNKNOWN"
+                                  ? anime.englishName
+                                  : anime.name,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // mandar informação do anime
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AnimeDetailPage(
+                                    animeItem: anime,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              width: 210,
+                              height: 300,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    anime.imageURL,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
       ],
     );
   }
-  }
+}

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:otaku_on_demand/services/favoritosProvider.dart';
+import 'package:otaku_on_demand/services/assistidosProvider.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ void main() async {
 
   final firestoreService = FirestoreService();
   final favoritesProvider = FavoritesProvider();
+  final assistidosProvider = AssistidosProvider();
   await firestoreService.fetchData();
 
   runApp(
@@ -26,6 +28,9 @@ void main() async {
         ),
         ChangeNotifierProvider.value(
           value: favoritesProvider,
+        ),
+        ChangeNotifierProvider.value(
+          value: assistidosProvider,
         ),
       ],
       child: const MyApp(),

@@ -29,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: Colors.white,
+            color: Colors.black,
             onPressed: () => Navigator.of(context).pop(),
           ),
           backgroundColor: Colors.white,
@@ -44,17 +44,17 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        height: 30,
-                        width: 30,
+                        height: 60,
+                        width: 60,
                         decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
-                                  "assets/images/logotipo.jpg",
+                                  "assets/images/logotipo.png",
                                 ),
                                 fit: BoxFit.fill)),
                       ),
                       const Text(
-                        "Otaku on demand",
+                        "Otaku on Demand",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -225,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
         String userId = user.uid;
 
         // Add user information to Firestore "users" collection
-        await FirebaseFirestore.instance.collection('usersList').doc(userId).set({
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
           'email': salvaremail,
           'displayName': salvarnome,
           'favoritos': [], // Initial empty list for favoritos

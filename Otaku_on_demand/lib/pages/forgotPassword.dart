@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 
@@ -9,6 +10,8 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  final TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +40,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       decoration: const BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage(
-                        "assets/images/logotipo.jpg",
-                      ))),
+                                "assets/images/logotipo.png",
+                              ),)),
                     ),
                     const Text(
                       "Otaku on\n demand",
@@ -73,6 +76,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   height: 30,
                 ),
                 TextFormField(
+                  controller: emailController,
                   autofocus: true,
                   keyboardType: TextInputType.name,
                   decoration: const InputDecoration(
@@ -99,8 +103,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.bold,
                         )),
-                    onPressed: () {
-                      _showPopup();
+                    onPressed: () async {
+                      try {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+                      } catch (e) {
+                        const SnackBar(
+                          content: Text('Erro ao mandar email'),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 4),
+                        );
+                      }
                     },
                     child: const Text('Confirmar'),
                   ),

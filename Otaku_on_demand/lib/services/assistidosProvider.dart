@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/animemodel.dart';
 
-class FavoritesProvider extends ChangeNotifier {
+class AssistidosProvider extends ChangeNotifier {
   List<AnimeItem> favoritesList = [];
 
   Future<void> getData() async {
-    // Fetch user favorites from Firestore based on the user ID
-    // Update favoritesList accordingly
+    // Fetch user assistir from Firestore based on the user ID
+    // Update assistirList accordingly
 
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -20,12 +20,12 @@ class FavoritesProvider extends ChangeNotifier {
         DocumentReference userDocRef = FirebaseFirestore.instance.collection(
             'users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ??
+        // Get the current array of "assistir_depois" or initialize an empty array
+        List<dynamic> assistir = (await userDocRef.get()).get('assistir_depois') ??
             [];
 
-        // "favoritos" vira uma List<AnimeItem>
-        favoritesList = favorites.map((item) {
+        // "assistir_depois" vira uma List<AnimeItem>
+        favoritesList = assistir.map((item) {
           return AnimeItem(
             name: item['Name'] ?? '',
             englishName: item['English Name'] ?? '',
@@ -56,12 +56,12 @@ class FavoritesProvider extends ChangeNotifier {
         print('User is null');
       }
     } catch (e) {
-      print('Error getting favorites: $e');
+      print('Error getting assistir: $e');
     }
   }
 
 
-  Future<void> addToFavorites(AnimeItem animeItem) async {
+  Future<void> addToAssistir(AnimeItem animeItem) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
@@ -71,11 +71,11 @@ class FavoritesProvider extends ChangeNotifier {
         // Reference to the user's document in the "users" collection
         DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ?? [];
+        // Get the current array of "'assistir_depois'" or initialize an empty array
+        List<dynamic> assistir = (await userDocRef.get()).get('assistir_depois') ?? [];
 
-        // Add the new AnimeItem to the "favoritos" array
-        favorites.add({
+        // Add the new AnimeItem to the "'assistir_depois'" array
+        assistir.add({
           'Name': animeItem.name,
           'Image URL': animeItem.imageURL,
           'English Name': animeItem.englishName,
@@ -99,21 +99,21 @@ class FavoritesProvider extends ChangeNotifier {
           // Include other properties based on your AnimeItem class
         });
 
-        // Update the "favoritos" array in the user's document
-        await userDocRef.update({'favoritos': favorites});
+        // Update the "assistir" array in the user's document
+        await userDocRef.update({'assistir_depois': assistir});
 
-        // Update favoritesList accordingly
+        // Update assistirList accordingly
         await getData();
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error adding to favorites: $e');
+      print('Error adding to assistir: $e');
     }
   }
 
-  Future<void> removeFromFavorites(AnimeItem animeItem) async {
+  Future<void> removeFromAssistir(AnimeItem animeItem) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
@@ -123,23 +123,23 @@ class FavoritesProvider extends ChangeNotifier {
         // Reference to the user's document in the "users" collection
         DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ?? [];
+        // Get the current array of "assistir" or initialize an empty array
+        List<dynamic> assistir = (await userDocRef.get()).get('assistir_depois') ?? [];
 
-        // Remove the AnimeItem from the "favoritos" array
-        favorites.removeWhere((item) => item['anime_id'] == animeItem.animeid);
+        // Remove the AnimeItem from the "assistir" array
+        assistir.removeWhere((item) => item['anime_id'] == animeItem.animeid);
 
-        // Update the "favoritos" array in the user's document
-        await userDocRef.update({'favoritos': favorites});
+        // Update the "assistir" array in the user's document
+        await userDocRef.update({'assistir_depois': assistir});
 
-        // Update favoritesList accordingly
+        // Update assistirList accordingly
         await getData();
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error removing from favorites: $e');
+      print('Error removing from assistir: $e');
     }
   }
 }

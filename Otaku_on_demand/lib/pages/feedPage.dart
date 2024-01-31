@@ -3,7 +3,7 @@ import 'package:otaku_on_demand/pages/listPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:otaku_on_demand/pages/searchPage.dart';
 import 'package:flutter/material.dart';
-//import 'package:otaku_on_demand/pages/UserConfig.dart';
+import 'package:otaku_on_demand/pages/UserConfig.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -17,7 +17,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Widget> widgetList = [
     const HomePage(),
     const ListPage(),
-    //const MyHomePage(),
+    const UserConfig(),
   ];
 
   @override
@@ -80,10 +80,10 @@ class _FeedPageState extends State<FeedPage> {
         },
         currentIndex: myIndex,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "feed"),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Feed"),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            label: "listas",
+            label: "Listas",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

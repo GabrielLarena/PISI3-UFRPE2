@@ -18,13 +18,14 @@ class _ListPageState extends State<ListPage> {
           itemCount: animeList.length,
           itemBuilder: (context, index) {
             AnimeList anime = animeList[index];
+            var list = animeList[index].title;
             return Card(
               child: ListTile(
                 title: Text(anime.title),
                 trailing: const Icon(Icons.arrow_forward_rounded),
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const ItemPage()));
+                      MaterialPageRoute(builder: (context) => ItemPage(list: list)));
                 },
               ),
             );

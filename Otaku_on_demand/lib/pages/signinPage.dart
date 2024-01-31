@@ -3,7 +3,7 @@ import 'package:otaku_on_demand/pages/feedPage.dart';
 import 'package:otaku_on_demand/pages/forgotPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:otaku_on_demand/model/animemodel.dart';
+//import 'package:otaku_on_demand/model/animemodel.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
                             fit: BoxFit.fill)),
                   ),
                   const Text(
-                    "Otaku on \n demand",
+                    "Otaku on \n Demand",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 45.0,

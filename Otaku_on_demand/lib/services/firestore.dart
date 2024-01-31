@@ -12,7 +12,8 @@ class FirestoreService extends ChangeNotifier {
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection('animeItem')
             //teste de limite
-            .limit(8632)
+            //.limit(8632)
+            .orderBy('Score', descending: true)
             .get();
 
         // transformando data em modelo animeItem

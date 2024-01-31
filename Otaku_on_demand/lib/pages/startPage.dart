@@ -36,7 +36,7 @@ class _StartPageState extends State<StartPage> {
                 Container(
                   alignment: Alignment.center,
                   child: const Text(
-                  "Otaku on \n demand",
+                  "Otaku on \n Demand",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 45.0,
