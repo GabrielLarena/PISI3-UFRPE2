@@ -4,6 +4,8 @@ import 'package:otaku_on_demand/pages/signupPage.dart';
 import 'package:flutter/material.dart';
 
 class StartPage extends StatefulWidget {
+  const StartPage({super.key});
+
   @override
   _StartPageState createState() => _StartPageState();
 }
@@ -12,7 +14,7 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff2f2f2),
+      backgroundColor: const Color(0xfff2f2f2),
       body: Container(
         child: SingleChildScrollView(
           child: Padding(
@@ -22,34 +24,30 @@ class _StartPageState extends State<StartPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  height: 60,
-                  width: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        //logotipo do aplicativo
-                        "assets/images/logotipo.jpg",
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
+                  height: 240,
+                  width: 240,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                            "assets/images/logotipo.png",
+                          ),
+                          fit: BoxFit.fill)),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: Text(
-                  "Otaku on \n demand",
-                  style: const TextStyle(
+                  child: const Text(
+                  "Otaku on \n Demand",
+                  style: TextStyle(
                     color: Colors.black,
                     fontSize: 45.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60.0,
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
@@ -64,20 +62,19 @@ class _StartPageState extends State<StartPage> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60.0,
                 ),
-                Container(
+                SizedBox(
                   height: 50.0,
                   width: 230.0,
                   child: ElevatedButton(
-                    child: Text('LOGIN'),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: Color(0xffcc4b00),
+                        backgroundColor: const Color(0xffcc4b00),
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.bold)),
@@ -85,24 +82,24 @@ class _StartPageState extends State<StartPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignInPage()));
+                              builder: (context) => const SignInPage()));
                     },
+                    child: const Text('LOGIN'),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30.0,
                 ),
-                Container(
+                SizedBox(
                   height: 50.0,
                   width: 230.0,
                   child: ElevatedButton(
-                    child: Text('CADASTRO'),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: Color(0xffcc4b00),
+                        backgroundColor: const Color(0xffcc4b00),
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.bold)),
@@ -110,31 +107,32 @@ class _StartPageState extends State<StartPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpPage()));
+                              builder: (context) => const SignUpPage()));
                     },
+                    child: const Text('CADASTRO'),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30.0,
                 ),
-                Container(
+                SizedBox(
                   height: 50.0,
                   width: 150.0,
                   child: ElevatedButton(
-                    child: Text('SOBRE'),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: Color(0xff9029fb),
+                        backgroundColor: const Color(0xff9029fb),
+                        foregroundColor: Colors.white,
                         textStyle: const TextStyle(
-                            color: Colors.white,
                             fontSize: 15,
                             fontStyle: FontStyle.normal,
                             fontWeight: FontWeight.bold)),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AboutPage()));
+                          MaterialPageRoute(builder: (context) => const AboutPage()));
                     },
+                    child: const Text('SOBRE'),
                   ),
                 ),
               ],

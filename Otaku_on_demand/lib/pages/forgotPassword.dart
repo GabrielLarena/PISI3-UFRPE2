@@ -1,22 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:otaku_on_demand/pages/startPage.dart';
 
 class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key});
+
   @override
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  final TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff2f2f2),
+      backgroundColor: const Color(0xfff2f2f2),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff9029fb),
       ),
       body: Padding(
         padding: const EdgeInsets.all(50),
@@ -34,11 +40,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       decoration: const BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage(
-                        "assets/images/logotipo.jpg",
-                      ))),
+                                "assets/images/logotipo.png",
+                              ),)),
                     ),
                     const Text(
-                      "Otaku on demand",
+                      "Otaku on\n demand",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 45.0,
@@ -70,6 +76,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   height: 30,
                 ),
                 TextFormField(
+                  controller: emailController,
                   autofocus: true,
                   keyboardType: TextInputType.name,
                   decoration: const InputDecoration(
@@ -83,21 +90,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 const SizedBox(
                   height: 50,
                 ),
-                Container(
+                SizedBox(
                   height: 50.0,
                   width: 230.0,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: const Color(0xff29af6f),
+                        backgroundColor: const Color(0xffcc4b00),
                         textStyle: const TextStyle(
                           color: Colors.white,
                           fontStyle: FontStyle.normal,
                           fontWeight: FontWeight.bold,
                         )),
-                    onPressed: () {
-                      _showPopup();
+                    onPressed: () async {
+                      try {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+                      } catch (e) {
+                        const SnackBar(
+                          content: Text('Erro ao mandar email'),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 4),
+                        );
+                      }
                     },
                     child: const Text('Confirmar'),
                   ),
@@ -126,17 +141,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               textAlign: TextAlign.center),
           actions: <Widget>[
             Center(
-              child: Container(
+              child: SizedBox(
                 height: 50.0,
                 width: 150.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const StartPage()));
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
-                      backgroundColor: const Color(0xff29af6f),
+                      backgroundColor: const Color(0xffcc4b00),
                       textStyle: const TextStyle(
                         color: Colors.white,
                         fontStyle: FontStyle.normal,
@@ -148,7 +164,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
           ],
         );
-        ;
       },
     );
   }
