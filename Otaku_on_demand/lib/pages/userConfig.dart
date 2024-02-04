@@ -1,201 +1,215 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
-
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Tela do Usuário',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: const UserConfig(),
-    );
-  }
-}
+import 'package:otaku_on_demand/services/firestore.dart';
+import 'package:provider/provider.dart';
 
 class UserConfig extends StatelessWidget {
   const UserConfig({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 35,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
+      body: FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('users')
+              .doc(user?.uid)
+              .get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Loading indicator or placeholder can be added here
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              // Handle case where user data does not exist
+              return const Center(child: Text('ERRO: Usuario não encontrado.'));
+            }
+
+            var userData = snapshot.data?.data() as Map<String, dynamic>;
+            var displayName = userData['displayName'] ?? 'User';
+
+            return Container(
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      'Bem-vindo, $displayName',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  _mostrarPopUpMudarSenha(context);
-                },
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.key,
-                      color: Colors.orange,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        _mostrarPopUpMudarSenha(context);
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.key,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Mudar senha",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                              Text("Change password",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
+                            ],
+                          ),
+                          Spacer(),
+                          const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Mudar senha",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
-                        Text("Change password",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
-                    ),
-                    Spacer(),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.orange,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                ),
-                onPressed: () {
-                  _mostrarPopUpSalvarAnime(context);
-                },
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.add,
-                      color: Colors.orange,
-                    ),
-                    SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Adicione um anime",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
-                        Text("Add an anime",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
-                    ),
-                    Spacer(),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.orange,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                onPressed: () {
-                  _mostrarPopUpDeletar(context);
-                },
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.delete_forever,
-                      color: Colors.orange,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        _mostrarPopUpSalvarAnime(context);
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.add,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Adicione um anime",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                              Text("Add an anime",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
+                            ],
+                          ),
+                          Spacer(),
+                          const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Deletar Conta",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
-                        Text("Delete Account",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
-                    ),
-                    Spacer(),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.orange,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                ),
-                onPressed: () {
-                  _mostrarPopUpSair(context);
-                },
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.logout,
-                      color: Colors.orange,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        _mostrarPopUpDeletar(context);
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.delete_forever,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Deletar Conta",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                              Text("Delete Account",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
+                            ],
+                          ),
+                          Spacer(),
+                          const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Sair",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 15)),
-                        Text("Log out",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        _mostrarPopUpSair(context);
+                      },
+                      child: const Row(
+                        children: [
+                           Icon(
+                            Icons.logout,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Sair",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                              Text("Log out",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 
@@ -364,51 +378,50 @@ class UserConfig extends StatelessWidget {
   }
 
   void _mostrarPopUpSalvarAnime(BuildContext context) {
-    List<String> labels = [
-      "ID do Anime",
-      "Nome do anime",
-      "Nome em inglês",
-      "Nota",
-      "Gênero",
-      "Sinopse",
-      "Tipo",
-      "N de Episódios",
-      "Data de lançamento",
-      "Data de estreia",
-      "Status",
-      "Estúdio",
-      "Fonte",
-      "Duração",
-      "Classificação indicativa",
-      "Rank",
-      "Popularidade",
-      "Favoritos",
-      "Avaliado por",
-      "Membros",
-      "URL da imagem"
-    ];
-
-    List<TextEditingController> controllers =
-        List.generate(21, (index) => TextEditingController());
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final firestoreService = Provider.of<FirestoreService>(context, listen: false);
+
+        List<String> inputs = [
+          "Nome do anime",
+          "Nome em inglês",
+          "Nota",
+          "Gênero",
+          "Sinopse",
+          "Tipo (filme, anime, OVA)",
+          "N de Episódios",
+          "Data de lançamento",
+          "Data de estreia",
+          "Estúdio",
+          "Fonte",
+          "Duração",
+          "Classificação indicativa",
+          "Rank",
+          "Popularidade",
+          "Favoritos",
+          "Membros",
+          "URL da imagem"
+        ];
+
+        List<TextEditingController> controllers =
+        List.generate(18, (index) => TextEditingController());
+
         return AlertDialog(
           title: const Text('Salvar Anime'),
           content: SingleChildScrollView(
             child: Column(
               children: List.generate(
-                21,
-                (index) => Padding(
+                18,
+                    (index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(labels[index]),
+                      Text(inputs[index]),
                       TextField(
                         controller: controllers[index],
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Digite aqui',
                           border: OutlineInputBorder(),
                         ),
@@ -422,16 +435,39 @@ class UserConfig extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
+                List<String> labels =
+                controllers.map((controller) => controller.text).toList();
+
                 // Lógica para o botão "Salvar anime"
-                if (controllers.any((controller) => controller.text.isEmpty)) {
+                if (labels.any((value) => value.isEmpty)) {
                   // Pelo menos um campo está vazio, mostrar mensagem de erro
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Preencha todos os campos'),
+                    const SnackBar(
+                      content: Text('Preencha todos os campos'),
                     ),
                   );
                 } else {
                   // Todos os campos estão preenchidos, salvar anime
+                  firestoreService.animeAdd(
+                      labels[0],
+                      labels[1],
+                      labels[2],
+                      labels[3],
+                      labels[4],
+                      labels[5],
+                      labels[6],
+                      labels[7],
+                      labels[8],
+                      labels[9],
+                      labels[10],
+                      labels[11],
+                      labels[12],
+                      labels[13],
+                      labels[14],
+                      labels[15],
+                      labels[16],
+                      labels[17],
+                      );
                   Navigator.of(context).pop();
                   // Lógica para salvar as informações do anime
                 }

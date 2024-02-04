@@ -17,40 +17,56 @@ class FavoritesProvider extends ChangeNotifier {
         String userId = user.uid;
 
         // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection(
-            'users').doc(userId);
+        DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
 
         // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ??
-            [];
+        List<DocumentReference> favorites =
+            (await userDocRef.get()).get('favoritos')?.cast<DocumentReference>() ?? [];
 
-        // "favoritos" vira uma List<AnimeItem>
-        favoritesList = favorites.map((item) {
-          return AnimeItem(
-            name: item['Name'] ?? '',
-            englishName: item['English Name'] ?? '',
-            imageURL: item['Image URL'] ?? '',
-            score: item['Score'] ?? '',
-            genres: item['Genres'] ?? '',
-            animeid: item['anime_id'] ?? '',
-            synopsis: item['Synopsis'] ?? '',
-            type: item['Type'] ?? '',
-            episodes: item['Episodes'] ?? '',
-            aired: item['Aired'] ?? '',
-            premiered: item['Premiered'] ?? '',
-            source: item['Source'] ?? '',
-            duration: item['Duration'] ?? '',
-            rating: item['Rating'] ?? '',
-            rank: item['Rank'] ?? '',
-            popularity: item['Popularity'] ?? '',
-            members: item['Members'] ?? '',
-            favorites: item['Favorites'] ?? '',
-            scoredBy: item['Scored By'] ?? '',
-            studios: item['Studios'] ?? '',
-          );
-        }).toList();
+        // Fetch each referenced animeItem and update the favoritesList
+        List<AnimeItem> updatedFavoritesList = [];
+        for (DocumentReference animeItemRef in favorites) {
+          DocumentSnapshot animeItemSnapshot;
+          try {
+            animeItemSnapshot = await animeItemRef.get();
+          } catch (e) {
+            print('Error fetching animeItem: $e');
+            continue; // Skip to the next iteration
+          }
 
-    // Notify listeners about the changes
+          if (animeItemSnapshot.exists) {
+            Map<String, dynamic> animeItemData =
+                animeItemSnapshot.data() as Map<String, dynamic>;
+            updatedFavoritesList.add(AnimeItem(
+              name: animeItemData['Name'] ?? '',
+              englishname: animeItemData['English name'] ?? '',
+              imageURL: animeItemData['Image URL'] ?? '',
+              score: animeItemData['Score'] ?? '',
+              genres: animeItemData['Genres'] ?? '',
+              animeid: animeItemData['anime_id'] ?? '',
+              synopsis: animeItemData['Synopsis'] ?? '',
+              type: animeItemData['Type'] ?? '',
+              episodes: animeItemData['Episodes'] ?? '',
+              aired: animeItemData['Aired'] ?? '',
+              premiered: animeItemData['Premiered'] ?? '',
+              source: animeItemData['Source'] ?? '',
+              duration: animeItemData['Duration'] ?? '',
+              rating: animeItemData['Rating'] ?? '',
+              rank: animeItemData['Rank'] ?? '',
+              popularity: animeItemData['Popularity'] ?? '',
+              members: animeItemData['Members'] ?? '',
+              favorites: animeItemData['Favorites'] ?? '',
+              scoredBy: animeItemData['Scored By'] ?? '',
+              studios: animeItemData['Studios'] ?? '',
+            ));
+          }
+        }
+
+        // Update favoritesList accordingly
+        favoritesList = updatedFavoritesList;
+
+        // Notify listeners about the changes
         notifyListeners();
       } else {
         print('User is null');
@@ -60,60 +76,48 @@ class FavoritesProvider extends ChangeNotifier {
     }
   }
 
-
-  Future<void> addToFavorites(AnimeItem animeItem) async {
+  Future<void> addToFavorites(String animeId) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+        // Reference to the user document
+        DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ?? [];
+        print('user: $userDocRef');
 
-        // Add the new AnimeItem to the "favoritos" array
-        favorites.add({
-          'Name': animeItem.name,
-          'Image URL': animeItem.imageURL,
-          'English Name': animeItem.englishName,
-          'Score': animeItem.score,
-          'Genres': animeItem.genres,
-          'anime_id': animeItem.animeid,
-          'Synopsis': animeItem.synopsis,
-          'Type': animeItem.type,
-          'Episodes': animeItem.episodes,
-          'Aired': animeItem.aired,
-          'Premiered': animeItem.premiered,
-          'Source': animeItem.source,
-          'Duration': animeItem.duration,
-          'Rating': animeItem.rating,
-          'Rank': animeItem.rank,
-          'Popularity': animeItem.popularity,
-          'Members': animeItem.members,
-          'Favorites': animeItem.favorites,
-          'Scored By': animeItem.scoredBy,
-          'Studios': animeItem.studios,
-          // Include other properties based on your AnimeItem class
+        // Create a new document reference for animeItem
+        DocumentReference animeItemRef =
+        FirebaseFirestore.instance.collection('animeTest').doc(animeId);
+
+        //test
+        print('AnimeItem Reference: $animeItemRef');
+
+        print('Before update');
+
+        // Add the animeItem reference to the 'favoritos' array in the user document
+        await userDocRef.update({
+          'favoritos': FieldValue.arrayUnion([animeItemRef]),
         });
 
-        // Update the "favoritos" array in the user's document
-        await userDocRef.update({'favoritos': favorites});
+        print('After update');
 
-        // Update favoritesList accordingly
         await getData();
         notifyListeners();
+
+        print('AnimeItem reference added to favorites successfully.');
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error adding to favorites: $e');
+      print('Error adding AnimeItem reference to favorites: $e');
     }
   }
 
-  Future<void> removeFromFavorites(AnimeItem animeItem) async {
+  Future<void> removeFromFavorites(String animeId) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
@@ -121,16 +125,17 @@ class FavoritesProvider extends ChangeNotifier {
         String userId = user.uid;
 
         // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+        DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ?? [];
+        // Create a new document reference for animeItem
+        DocumentReference animeItemRef =
+        FirebaseFirestore.instance.collection('animeTest').doc(animeId);
 
-        // Remove the AnimeItem from the "favoritos" array
-        favorites.removeWhere((item) => item['anime_id'] == animeItem.animeid);
-
-        // Update the "favoritos" array in the user's document
-        await userDocRef.update({'favoritos': favorites});
+        // Remove the animeItem reference from the 'favoritos' array in the user document
+        await userDocRef.update({
+          'favoritos': FieldValue.arrayRemove([animeItemRef]),
+        });
 
         // Update favoritesList accordingly
         await getData();

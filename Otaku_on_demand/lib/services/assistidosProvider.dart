@@ -28,7 +28,7 @@ class AssistidosProvider extends ChangeNotifier {
         favoritesList = assistir.map((item) {
           return AnimeItem(
             name: item['Name'] ?? '',
-            englishName: item['English Name'] ?? '',
+            englishname: item['English name'] ?? '',
             imageURL: item['Image URL'] ?? '',
             score: item['Score'] ?? '',
             genres: item['Genres'] ?? '',
@@ -78,7 +78,7 @@ class AssistidosProvider extends ChangeNotifier {
         assistir.add({
           'Name': animeItem.name,
           'Image URL': animeItem.imageURL,
-          'English Name': animeItem.englishName,
+          'English name': animeItem.englishname,
           'Score': animeItem.score,
           'Genres': animeItem.genres,
           'anime_id': animeItem.animeid,

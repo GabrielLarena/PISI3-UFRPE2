@@ -15,7 +15,7 @@ List<AnimeList> animeList = [
 class AnimeItem {
   final String animeid;
   final String name;
-  final String englishName;
+  final String englishname;
   final String imageURL;
   final String score;
   final String genres;
@@ -35,7 +35,7 @@ class AnimeItem {
   final String studios;
 
   AnimeItem({required this.name,
-    required this.englishName,
+    required this.englishname,
     required this.imageURL,
     required this.score,
     required this.animeid,
@@ -59,7 +59,7 @@ class AnimeItem {
   factory AnimeItem.fromMap(Map<String, dynamic> map) {
     return AnimeItem(
       name: map['Name'] ?? '',
-      englishName: map['English name'] ?? '',
+      englishname: map['English name'] ?? '',
       imageURL: map['Image URL'] ?? '',
       score: map['Score'] ?? '',
       genres: map['Genres'] ?? '',
@@ -87,7 +87,7 @@ class AnimeItem {
       {
         'Name': name,
         'Image URL': imageURL,
-        'English Name': englishName,
+        'English name': englishname,
         'Score': score,
         'Genres': genres,
         'anime_id': animeid,
@@ -113,7 +113,7 @@ class AnimeItem {
   static AnimeItem fromJson(Map<String, dynamic> json) =>
       AnimeItem(
         name: json['Name'],
-        englishName: json['English Name'],
+        englishname: json['English name'],
         imageURL: json['Image URL'],
         score: json['Score'],
         genres: json['Genres'],

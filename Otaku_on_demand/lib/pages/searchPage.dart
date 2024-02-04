@@ -1,3 +1,4 @@
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
@@ -60,27 +61,27 @@ class _SearchPageState extends State<SearchPage> {
               child: ListTile(
                 trailing: IconButton(
                   icon: Icon(
-                    favoritesProvider.favoritesList
-                        .any((item) => item.animeid == anime.animeid)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: Colors.orange,
-                  ),
+                  favoritesProvider.favoritesList
+                      .any((item) => item.animeid == anime.animeid)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: Colors.orange,
+                ),
                   onPressed: () {
                     // Check if the animeItem is already in favorites
                     if (favoritesProvider.favoritesList
                         .any((item) => item.animeid == anime.animeid)) {
                       // Remove from favorites
-                      favoritesProvider.removeFromFavorites(anime);
+                      favoritesProvider.removeFromFavorites(anime.animeid);
                     } else {
                       // Add to favorites
-                      favoritesProvider.addToFavorites(anime);
+                      favoritesProvider.addToFavorites(anime.animeid);
                     }
                   },
                 ),
                 title: Text(
-                  anime.englishName != "UNKNOWN"
-                      ? anime.englishName
+                  anime.englishname != "UNKNOWN"
+                      ? anime.englishname
                       : anime.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -133,16 +134,16 @@ class _SearchPageState extends State<SearchPage> {
                     if (favoritesProvider.favoritesList
                         .any((item) => item.animeid == anime.animeid)) {
                       // Remove from favorites
-                      favoritesProvider.removeFromFavorites(anime);
+                      favoritesProvider.removeFromFavorites(anime.animeid);
                     } else {
                       // Add to favorites
-                      favoritesProvider.addToFavorites(anime);
+                      favoritesProvider.addToFavorites(anime.animeid);
                     }
                   },
                 ),
                 title: Text(
-                  anime.englishName != "UNKNOWN"
-                      ? anime.englishName
+                  anime.englishname != "UNKNOWN"
+                      ? anime.englishname
                       : anime.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

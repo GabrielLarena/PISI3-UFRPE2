@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/pages/listProvider.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
-
 import '../services/favoritosProvider.dart';
 //import 'package:otaku_on_demand/model/animemodel.dart';
 
@@ -44,6 +43,7 @@ class _HomePageListState extends State<HomePageList> {
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
 
     favoritesProvider.getData();
+    firestoreService.fetchData();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,8 +79,8 @@ class _HomePageListState extends State<HomePageList> {
                     SizedBox(
                       width: 210,
                       child: Text(
-                        anime.englishName != "UNKNOWN"
-                            ? anime.englishName
+                        anime.englishname != "UNKNOWN"
+                            ? anime.englishname
                             : anime.name,
                         style: const TextStyle(
                           color: Colors.black,
@@ -168,8 +168,8 @@ class _HomePageListState extends State<HomePageList> {
                           SizedBox(
                             width: 210,
                             child: Text(
-                              anime.englishName != "UNKNOWN"
-                                  ? anime.englishName
+                              anime.englishname != "UNKNOWN"
+                                  ? anime.englishname
                                   : anime.name,
                               style: const TextStyle(
                                 color: Colors.black,
