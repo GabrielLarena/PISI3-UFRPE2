@@ -1,145 +1,162 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../model/animemodel.dart';
 
 class AssistidosProvider extends ChangeNotifier {
   List<AnimeItem> favoritesList = [];
 
   Future<void> getData() async {
-    // Fetch user assistir from Firestore based on the user ID
-    // Update assistirList accordingly
-
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection(
-            'users').doc(userId);
+        // Referencia a coleçao usuario
+        DocumentReference userDocRef =
+            FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "assistir_depois" or initialize an empty array
-        List<dynamic> assistir = (await userDocRef.get()).get('assistir_depois') ??
+        // array atual de "assistidos" ou manda uma lista vazia
+        //nome igual ao dos favoritos para a lista
+        List<DocumentReference> favorites = (await userDocRef.get())
+                .get('assistir_depois')
+                ?.cast<DocumentReference>() ??
             [];
 
-        // "assistir_depois" vira uma List<AnimeItem>
-        favoritesList = assistir.map((item) {
-          return AnimeItem(
-            name: item['Name'] ?? '',
-            englishname: item['English name'] ?? '',
-            imageURL: item['Image URL'] ?? '',
-            score: item['Score'] ?? '',
-            genres: item['Genres'] ?? '',
-            animeid: item['anime_id'] ?? '',
-            synopsis: item['Synopsis'] ?? '',
-            type: item['Type'] ?? '',
-            episodes: item['Episodes'] ?? '',
-            aired: item['Aired'] ?? '',
-            premiered: item['Premiered'] ?? '',
-            source: item['Source'] ?? '',
-            duration: item['Duration'] ?? '',
-            rating: item['Rating'] ?? '',
-            rank: item['Rank'] ?? '',
-            popularity: item['Popularity'] ?? '',
-            members: item['Members'] ?? '',
-            favorites: item['Favorites'] ?? '',
-            scoredBy: item['Scored By'] ?? '',
-            studios: item['Studios'] ?? '',
-          );
-        }).toList();
+        // Coletando as referencias e adicionando na lista
+        List<AnimeItem> updatedFavoritesList = [];
+        for (DocumentReference animeItemRef in favorites) {
+          DocumentSnapshot animeItemSnapshot;
+          try {
+            animeItemSnapshot = await animeItemRef.get();
+          } catch (e) {
+            SnackBar(
+              content: Text('Erro coletando anime: $e'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            );
+            continue; // Skip para o proximo
+          }
 
-    // Notify listeners about the changes
+          if (animeItemSnapshot.exists) {
+            Map<String, dynamic> animeItemData =
+                animeItemSnapshot.data() as Map<String, dynamic>;
+            updatedFavoritesList.add(AnimeItem(
+              name: animeItemData['Name'] ?? '',
+              englishname: animeItemData['English name'] ?? '',
+              imageURL: animeItemData['Image URL'] ?? '',
+              score: animeItemData['Score'] ?? '',
+              genres: animeItemData['Genres'] ?? '',
+              animeid: animeItemData['anime_id'] ?? '',
+              synopsis: animeItemData['Synopsis'] ?? '',
+              type: animeItemData['Type'] ?? '',
+              episodes: animeItemData['Episodes'] ?? '',
+              aired: animeItemData['Aired'] ?? '',
+              premiered: animeItemData['Premiered'] ?? '',
+              source: animeItemData['Source'] ?? '',
+              duration: animeItemData['Duration'] ?? '',
+              rating: animeItemData['Rating'] ?? '',
+              rank: animeItemData['Rank'] ?? '',
+              popularity: animeItemData['Popularity'] ?? '',
+              members: animeItemData['Members'] ?? '',
+              favorites: animeItemData['Favorites'] ?? '',
+              scoredBy: animeItemData['Scored By'] ?? '',
+              studios: animeItemData['Studios'] ?? '',
+            ));
+          }
+        }
+
+        // Update da lista de assistidos, nome igual a de favoritos
+        favoritesList = updatedFavoritesList;
+
+        // Notify listeners
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error getting assistir: $e');
+      SnackBar(
+        content: Text('Erro assistir depois: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
-
-  Future<void> addToAssistir(AnimeItem animeItem) async {
+  Future<void> addToAssistir(String animeId) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+        // Referencia do usario
+        DocumentReference userDocRef =
+            FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "'assistir_depois'" or initialize an empty array
-        List<dynamic> assistir = (await userDocRef.get()).get('assistir_depois') ?? [];
+        print('user: $userDocRef');
 
-        // Add the new AnimeItem to the "'assistir_depois'" array
-        assistir.add({
-          'Name': animeItem.name,
-          'Image URL': animeItem.imageURL,
-          'English name': animeItem.englishname,
-          'Score': animeItem.score,
-          'Genres': animeItem.genres,
-          'anime_id': animeItem.animeid,
-          'Synopsis': animeItem.synopsis,
-          'Type': animeItem.type,
-          'Episodes': animeItem.episodes,
-          'Aired': animeItem.aired,
-          'Premiered': animeItem.premiered,
-          'Source': animeItem.source,
-          'Duration': animeItem.duration,
-          'Rating': animeItem.rating,
-          'Rank': animeItem.rank,
-          'Popularity': animeItem.popularity,
-          'Members': animeItem.members,
-          'Favorites': animeItem.favorites,
-          'Scored By': animeItem.scoredBy,
-          'Studios': animeItem.studios,
-          // Include other properties based on your AnimeItem class
+        // refencia do anime
+        DocumentReference animeItemRef =
+            FirebaseFirestore.instance.collection('animeItem').doc(animeId);
+
+        // adiciona anime nos 'assistidos' array do usuario
+        await userDocRef.update({
+          'assistir_depois': FieldValue.arrayUnion([animeItemRef]),
         });
 
-        // Update the "assistir" array in the user's document
-        await userDocRef.update({'assistir_depois': assistir});
+        print('After update');
 
-        // Update assistirList accordingly
         await getData();
         notifyListeners();
+
+        print('AnimeItem reference added to favorites successfully.');
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error adding to assistir: $e');
+      SnackBar(
+        content: Text('Erro ao adicionar: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
-  Future<void> removeFromAssistir(AnimeItem animeItem) async {
+  Future<void> removeFromAssistir(String animeId) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+        //  Referencia da coleção users do usuario
+        DocumentReference userDocRef =
+            FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "assistir" or initialize an empty array
-        List<dynamic> assistir = (await userDocRef.get()).get('assistir_depois') ?? [];
+        // referencia do documento
+        DocumentReference animeItemRef =
+            FirebaseFirestore.instance.collection('animeItem').doc(animeId);
 
-        // Remove the AnimeItem from the "assistir" array
-        assistir.removeWhere((item) => item['anime_id'] == animeItem.animeid);
+        // remover o anime de 'assistidos' array do usuario
+        await userDocRef.update({
+          'assistir_depois': FieldValue.arrayRemove([animeItemRef]),
+        });
 
-        // Update the "assistir" array in the user's document
-        await userDocRef.update({'assistir_depois': assistir});
-
-        // Update assistirList accordingly
+        // Update favoritesList
         await getData();
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error removing from assistir: $e');
+      SnackBar(
+        content: Text('Erro ao deletar: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 }

@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../model/animemodel.dart';
 
 class FavoritesProvider extends ChangeNotifier {
   List<AnimeItem> favoritesList = [];
 
   Future<void> getData() async {
-    // Fetch user favorites from Firestore based on the user ID
-    // Update favoritesList accordingly
 
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -16,23 +15,27 @@ class FavoritesProvider extends ChangeNotifier {
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
+        // Referencia a coleçao usuario
         DocumentReference userDocRef =
         FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
+        // array atual de "favoritos" ou manda uma lista vazia
         List<DocumentReference> favorites =
             (await userDocRef.get()).get('favoritos')?.cast<DocumentReference>() ?? [];
 
-        // Fetch each referenced animeItem and update the favoritesList
+        // Coletando as referencias e adicionando na lista
         List<AnimeItem> updatedFavoritesList = [];
         for (DocumentReference animeItemRef in favorites) {
           DocumentSnapshot animeItemSnapshot;
           try {
             animeItemSnapshot = await animeItemRef.get();
           } catch (e) {
-            print('Error fetching animeItem: $e');
-            continue; // Skip to the next iteration
+            SnackBar(
+              content: Text('Erro coletando anime: $e'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            );
+            continue; // Skip para o proximo
           }
 
           if (animeItemSnapshot.exists) {
@@ -63,16 +66,20 @@ class FavoritesProvider extends ChangeNotifier {
           }
         }
 
-        // Update favoritesList accordingly
+        // Update da lista de favoritos
         favoritesList = updatedFavoritesList;
 
-        // Notify listeners about the changes
+        // Notify listeners
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error getting favorites: $e');
+      SnackBar(
+        content: Text('Erro favoritos: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
@@ -83,22 +90,17 @@ class FavoritesProvider extends ChangeNotifier {
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user document
+        // Referencia do usario
         DocumentReference userDocRef =
         FirebaseFirestore.instance.collection('users').doc(userId);
 
         print('user: $userDocRef');
 
-        // Create a new document reference for animeItem
+        // refencia do anime
         DocumentReference animeItemRef =
-        FirebaseFirestore.instance.collection('animeTest').doc(animeId);
+        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
 
-        //test
-        print('AnimeItem Reference: $animeItemRef');
-
-        print('Before update');
-
-        // Add the animeItem reference to the 'favoritos' array in the user document
+        // adiciona anime nos 'favoritos' array do usuario
         await userDocRef.update({
           'favoritos': FieldValue.arrayUnion([animeItemRef]),
         });
@@ -113,7 +115,11 @@ class FavoritesProvider extends ChangeNotifier {
         print('User is null');
       }
     } catch (e) {
-      print('Error adding AnimeItem reference to favorites: $e');
+      SnackBar(
+        content: Text('Erro ao adicionar: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
@@ -124,27 +130,31 @@ class FavoritesProvider extends ChangeNotifier {
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
+        // Referencia da coleção users do usuario
         DocumentReference userDocRef =
         FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Create a new document reference for animeItem
+        // referencia do documento
         DocumentReference animeItemRef =
-        FirebaseFirestore.instance.collection('animeTest').doc(animeId);
+        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
 
-        // Remove the animeItem reference from the 'favoritos' array in the user document
+        // remover o anime de 'favoritos' array do usuario
         await userDocRef.update({
           'favoritos': FieldValue.arrayRemove([animeItemRef]),
         });
 
-        // Update favoritesList accordingly
+        // Update favoritesList
         await getData();
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error removing from favorites: $e');
+      SnackBar(
+        content: Text('Erro ao deletar: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 }

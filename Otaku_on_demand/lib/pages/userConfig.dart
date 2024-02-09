@@ -58,9 +58,9 @@ class UserConfig extends StatelessWidget {
                       onPressed: () {
                         _mostrarPopUpMudarSenha(context);
                       },
-                      child: Row(
+                      child: const Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.key,
                             color: Colors.orange,
                           ),
@@ -77,7 +77,7 @@ class UserConfig extends StatelessWidget {
                             ],
                           ),
                           Spacer(),
-                          const Icon(
+                          Icon(
                             Icons.arrow_forward,
                             color: Colors.orange,
                           ),
@@ -85,7 +85,7 @@ class UserConfig extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
@@ -100,9 +100,9 @@ class UserConfig extends StatelessWidget {
                       onPressed: () {
                         _mostrarPopUpSalvarAnime(context);
                       },
-                      child: Row(
+                      child: const Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.add,
                             color: Colors.orange,
                           ),
@@ -119,7 +119,7 @@ class UserConfig extends StatelessWidget {
                             ],
                           ),
                           Spacer(),
-                          const Icon(
+                          Icon(
                             Icons.arrow_forward,
                             color: Colors.orange,
                           ),
@@ -127,7 +127,7 @@ class UserConfig extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
@@ -142,9 +142,9 @@ class UserConfig extends StatelessWidget {
                       onPressed: () {
                         _mostrarPopUpDeletar(context);
                       },
-                      child: Row(
+                      child: const Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.delete_forever,
                             color: Colors.orange,
                           ),
@@ -161,7 +161,7 @@ class UserConfig extends StatelessWidget {
                             ],
                           ),
                           Spacer(),
-                          const Icon(
+                          Icon(
                             Icons.arrow_forward,
                             color: Colors.orange,
                           ),
@@ -169,7 +169,7 @@ class UserConfig extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
@@ -224,7 +224,7 @@ class UserConfig extends StatelessWidget {
             children: [
               const Text(
                   'Quer mesmo apagar sua conta?\nESSE PROCESSO É IRREVERSIVEL'),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -280,7 +280,7 @@ class UserConfig extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text('Quer mesmo sair da sua conta?'),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -332,14 +332,14 @@ class UserConfig extends StatelessWidget {
                 controller: senhaController,
                 obscureText: true,
                 decoration:
-                    InputDecoration(labelText: 'Escreva sua nova senha'),
+                    const InputDecoration(labelText: 'Escreva sua nova senha'),
               ),
               TextField(
                 controller: confirmarSenhaController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: 'Confirme sua senha'),
+                decoration: const InputDecoration(labelText: 'Confirme sua senha'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Lógica para o botão "Salvar alterações"
@@ -347,8 +347,8 @@ class UserConfig extends StatelessWidget {
                       confirmarSenhaController.text.isEmpty) {
                     // Campos vazios, mostrar mensagem de erro
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Preencha todos os campos'),
+                      const SnackBar(
+                        content: Text('Preencha todos os campos'),
                       ),
                     );
                   } else if (senhaController.text ==
@@ -359,8 +359,8 @@ class UserConfig extends StatelessWidget {
                   } else {
                     // Senhas não são iguais, mostrar mensagem de erro
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('As senhas não são iguais'),
+                      const SnackBar(
+                        content: Text('As senhas não são iguais'),
                       ),
                     );
                   }

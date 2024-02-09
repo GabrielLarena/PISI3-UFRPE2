@@ -27,7 +27,7 @@ class _FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            // Handle the onTap action here
+            //onTap da imagem
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const StartPage()));
           },

@@ -28,27 +28,28 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
   void initState() {
     super.initState();
 
-    // Access the FavoritesProvider
+    //FavoritesProvider - lista dos favoritos
     favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
 
-    // Check if the animeItem is already in favorites
+    //Checa se já esta na lista
     isFavorite = favoritesProvider.favoritesList
         .any((item) => item.animeid == widget.animeItem.animeid);
 
-    // You can also call getFavorites to ensure the list is up-to-date
+    //Update da lista
     favoritesProvider.getData();
 
-    // Access the FavoritesProvider
+    // assistidosProvider - lista dos assistidos
     assistidosProvider =
         Provider.of<AssistidosProvider>(context, listen: false);
 
-    // Check if the animeItem is already in favorites
+    //Checa se o item já esta nos assistidos
     isInList = assistidosProvider.favoritesList
         .any((item) => item.animeid == widget.animeItem.animeid);
 
-    // You can also call getFavorites to ensure the list is up-to-date
+    //update assistidos
     assistidosProvider.getData();
 
+    //updateAnimeItem para fazer o update do CRUD
     updatedAnimeItem = widget.animeItem;
   }
 
@@ -72,7 +73,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           color: Colors.orange,
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -95,15 +96,15 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     ElevatedButton.icon(
                       onPressed: () {
                         if (isFavorite) {
-                          favoritesProvider.removeFromFavorites(widget.animeItem
-                              .animeid);
+                          favoritesProvider
+                              .removeFromFavorites(widget.animeItem.animeid);
                         } else {
-                          favoritesProvider.addToFavorites(widget.animeItem
-                              .animeid);
+                          favoritesProvider
+                              .addToFavorites(widget.animeItem.animeid);
                         }
                         setState(() {
                           isFavorite = !isFavorite;
@@ -112,19 +113,17 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.orange,
-                        padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
                       ),
                       icon: Icon(
-                        isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
                       ),
                       label: Text(
                         isFavorite
                             ? 'Remover dos Favoritos'
                             : 'Adicionar aos Favoritos',
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -132,9 +131,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       onPressed: () {
                         if (isInList) {
                           assistidosProvider
-                              .removeFromAssistir(widget.animeItem);
+                              .removeFromAssistir(widget.animeItem.animeid);
                         } else {
-                          assistidosProvider.addToAssistir(widget.animeItem);
+                          assistidosProvider
+                              .addToAssistir(widget.animeItem.animeid);
                         }
                         setState(() {
                           isInList = !isInList;
@@ -143,8 +143,8 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.orange,
-                        padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
                       ),
                       icon: Icon(
                         isInList
@@ -155,7 +155,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         isInList
                             ? 'Remover do Assistir mais tarde'
                             : 'Assistir mais tarde',
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
@@ -196,29 +196,23 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   ),
                   const SizedBox(height: 20),
                   Row(
-                    children: [ ElevatedButton.icon(
-                      onPressed: () async {
-                        final animeDelete =
-                        FirebaseFirestore.instance.collection('animeTest').doc(
-                            animeItem.animeid);
-                        animeDelete.delete();
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        foregroundColor: Colors.orange,
-                        padding:
-                        const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 16),
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _popUpDeletar(context, animeItem.animeid);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple,
+                          foregroundColor: Colors.orange,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                        ),
+                        icon: const Icon(Icons.delete),
+                        label: const Text(
+                          'Deletar Anime',
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
-                      icon: const Icon(
-                          Icons.delete
-                      ),
-                      label: const Text(
-                        'Deletar Anime',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
                       const Spacer(),
                       ElevatedButton.icon(
                         onPressed: () async {
@@ -228,13 +222,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepPurple,
                           foregroundColor: Colors.orange,
-                          padding:
-                          const EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 16),
                         ),
-                        icon: const Icon(
-                            Icons.edit
-                        ),
+                        icon: const Icon(Icons.edit),
                         label: const Text(
                           'Editar Anime',
                           style: TextStyle(fontSize: 16),
@@ -285,8 +276,56 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
     );
   }
 
+  void _popUpDeletar(BuildContext context, String animeid) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Aviso'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Quer mesmo apagar esse anime?'),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        // Lógica para o botão "Sim"
+                        final animeDelete = FirebaseFirestore.instance
+                            .collection('animeItem')
+                            .doc(animeid);
+                        animeDelete.delete();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF0000),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Sim'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Fecha o pop-up
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                      ),
+                      child: const Text('Não'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
   Future<void> editAnimeDialog(BuildContext context) async {
-    final firestoreService = Provider.of<FirestoreService>(context, listen: false);
+    final firestoreService =
+        Provider.of<FirestoreService>(context, listen: false);
     final TextEditingController nameController = TextEditingController();
     final TextEditingController englishNameController = TextEditingController();
     final TextEditingController genresController = TextEditingController();
@@ -304,7 +343,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
     final TextEditingController favoritesController = TextEditingController();
     final TextEditingController membersController = TextEditingController();
 
-    // Set the initial text of the controllers to the current values
+    // Opções iniciais iguais
     nameController.text = updatedAnimeItem.name;
     englishNameController.text = updatedAnimeItem.englishname;
     genresController.text = updatedAnimeItem.genres;
@@ -322,7 +361,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
     favoritesController.text = updatedAnimeItem.favorites;
     membersController.text = updatedAnimeItem.members;
 
-    // Show the dialog
+    // ShowDialog
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -353,7 +392,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           actions: [
             ElevatedButton(
               onPressed: () {
-                // Update the updatedAnimeItem with the new values
+                // Update do updatedAnimeItem com os novos valores
                 updatedAnimeItem = AnimeItem(
                   name: nameController.text,
                   englishname: englishNameController.text,
@@ -372,8 +411,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   popularity: popularityController.text,
                   favorites: favoritesController.text,
                   members: membersController.text,
-                  imageURL: updatedAnimeItem.imageURL, // imageURL não muda
-                  animeid: updatedAnimeItem.animeid, // animeid não muda
+                  imageURL: updatedAnimeItem.imageURL,
+                  // imageURL não muda
+                  animeid: updatedAnimeItem.animeid,
+                  // animeid não muda
                   scoredBy: updatedAnimeItem.scoredBy, // scoredBy não muda
                 );
 
@@ -383,8 +424,8 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                 //update da pagina
                 firestoreService.fetchData();
 
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();// Close the dialog
+                Navigator.of(context).pop(); //fecha o dialog
+                Navigator.of(context).pop(); // fecha a pagina
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
@@ -397,7 +438,7 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
     );
   }
 
-  // Helper function to build text fields for the dialog
+  // constroi os textField do dialog
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
