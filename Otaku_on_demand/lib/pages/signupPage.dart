@@ -1,32 +1,41 @@
-import 'dart:io';
 import 'package:otaku_on_demand/pages/signinPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController _senha = TextEditingController();
-  TextEditingController _confirmarsenha =
+  final TextEditingController _senha = TextEditingController();
+  final TextEditingController _confirmarsenha =
       TextEditingController(); // PasswordValidation
+
+  var _salvarnome = '';
+  var _salvaremail = '';
+  var _salvarsenha = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xfff2f2f2),
+        backgroundColor: const Color(0xfff2f2f2),
         appBar: AppBar(
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
             color: Colors.black,
             onPressed: () => Navigator.of(context).pop(),
           ),
           backgroundColor: Colors.white,
         ),
         body: Padding(
+          padding: const EdgeInsets.all(50),
           child: Center(
             child: SingleChildScrollView(
               child: Form(
@@ -35,34 +44,34 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
+                        height: 60,
+                        width: 60,
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage(
-                                  "assets/images/logotipo.jpg",
+                                  "assets/images/logotipo.png",
                                 ),
                                 fit: BoxFit.fill)),
                       ),
-                      Text(
-                        "Otaku on demand",
-                        style: const TextStyle(
+                      const Text(
+                        "Otaku on Demand",
+                        style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Text('Cadastro',
-                          style: const TextStyle(
+                      const SizedBox(height: 20),
+                      const Text('Cadastro',
+                          style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
                           )),
-                      Divider(),
+                      const Divider(),
                       TextFormField(
                         autofocus: true,
                         keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Nome Completo",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -74,39 +83,18 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "O nome pode ter no máximo 18 caracteres";
                           }
 
-                          return null;
-                        }, // FormValidation
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                        autofocus: true,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            labelText: "Data de Nascimento",
-                            labelStyle: TextStyle(
-                                color: Color.fromRGBO(30, 30, 30, 100),
-                                fontSize: 15)),
-                        validator: (value) {
-                          if (value != null && value.isEmpty) {
-                            return "A data de nascimento é obrigatória";
-                          } else if (value != null &&
-                              !RegExp(r"(?:0[1-9]|[12][0-9]|3[01])[-/.](?:0[1-9]|1[012])[-/.](?:19\d{2}|20[01][0-9]|2020)")
-                                  .hasMatch(value)) {
-                            return "Insira uma data valida";
-                          }
+                          _salvarnome = value!;
 
                           return null;
                         }, // FormValidation
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
                         autofocus: true,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Email",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -120,10 +108,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             return "Insira um email valido";
                           }
 
+                          _salvaremail = value!;
+
                           return null;
                         }, // FormValidation
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -131,7 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         autofocus: true,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Senha",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -139,20 +129,22 @@ class _SignUpPageState extends State<SignUpPage> {
                         validator: (value) {
                           if (value != null && value.isEmpty) {
                             return "A senha é obrigatória";
-                          } else if (value != null && value.length < 8) {
-                            return "A senha precisa ter no mínimo 9 caracteres";
+                          } else if (value != null && value.length < 6) {
+                            return "A senha precisa ter no mínimo 6 caracteres";
                           }
+
+                          _salvarsenha = value!;
 
                           return null;
                         }, // FormValidation ,
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       TextFormField(
                         controller: _confirmarsenha,
                         autofocus: true,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             labelText: "Confirmar Senha",
                             labelStyle: TextStyle(
                                 color: Color.fromRGBO(30, 30, 30, 100),
@@ -167,36 +159,86 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         }, // FormValidation ,
                       ),
-                      SizedBox(height: 30),
-                      Container(
+                      const SizedBox(height: 30),
+                      SizedBox(
                         height: 50.0,
                         width: 230.0,
                         child: ElevatedButton(
-                          child: Text('Cadastrar'),
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30)),
-                              backgroundColor: Color(0xffcc4b00),
+                              backgroundColor: const Color(0xffcc4b00),
+                              foregroundColor: Colors.white,
                               textStyle: const TextStyle(
-                                  color: Colors.white,
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.bold)),
                           onPressed: () {
+                            //validação do que foi inserido pelo usuario
                             if (!_formKey.currentState!.validate()) {
                               return;
+                            }
+
+                            //firebase salvando email e senha, procurar como salvar nome do usuario depois
+                            signUp(_salvaremail, _salvarsenha, _salvarnome);
+
+                            try {
+                              _firebase.createUserWithEmailAndPassword(
+                                  email: _salvaremail, password: _salvarsenha);
+                            } on FirebaseAuthException catch (error) {
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text(error.message ?? 'Falha ao salvar.'),
+                                ),
+                              );
                             } // FormValidation
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SignInPage()));
+                                    builder: (context) => const SignInPage()));
                           },
+                          child: const Text('Cadastrar'),
                         ),
                       ),
                     ]),
               ),
             ),
           ),
-          padding: EdgeInsets.all(50),
         ));
+  }
+
+  void signUp(String salvaremail, String salvarsenha, String salvarnome) async {
+    try {
+      // Create a new user account
+      UserCredential userCredential =
+          await _firebase.createUserWithEmailAndPassword(
+        email: salvaremail,
+        password: salvarsenha,
+      );
+
+      // Access the user and user ID
+      User? user = userCredential.user;
+
+      if (user != null) {
+        String userId = user.uid;
+
+        // Add user information to Firestore "users" collection
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
+          'email': salvaremail,
+          'displayName': salvarnome,
+          'favoritos': [], // Initial empty list for favoritos
+          'assistir_depois': [], // Initial empty list for assistir_depois
+        });
+
+        // The user document is now created in the "users" collection
+        print('User account created with ID: $userId');
+      } else {
+        print('User is null');
+      }
+    } catch (e) {
+      print('Error creating account: $e');
+    }
   }
 }

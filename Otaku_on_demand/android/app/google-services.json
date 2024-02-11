@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "993477652592",
+    "project_id": "otakuondemandapp",
+    "storage_bucket": "otakuondemandapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993477652592:android:901f1576c07679ca10c4b5",
+        "android_client_info": {
+          "package_name": "com.example.otaku_on_demand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjtZ9qomxSLTLW-R3WYd-lSn8Q6Q2j8fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
