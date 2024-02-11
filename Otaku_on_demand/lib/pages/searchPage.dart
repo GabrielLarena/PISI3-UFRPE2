@@ -1,3 +1,4 @@
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
@@ -30,7 +31,9 @@ class _SearchPageState extends State<SearchPage> {
         title: Card(
           child: TextField(
             decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search), hintText: 'Procura por nome'),
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Procura por nome',
+            ),
             onChanged: (val) {
               setState(() {
                 name = val;
@@ -57,54 +60,57 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 );
               },
-              child: ListTile(
-                trailing: IconButton(
-                  icon: Icon(
-                    favoritesProvider.favoritesList
-                        .any((item) => item.animeid == anime.animeid)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: Colors.orange,
+              child: Card(
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: ListTile(
+                  trailing: IconButton(
+                    icon: Icon(
+                      favoritesProvider.favoritesList
+                          .any((item) => item.animeid == anime.animeid)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.orange,
+                    ),
+                    onPressed: () {
+                      // Checar se o anime esta na lista de favortios
+                      if (favoritesProvider.favoritesList
+                          .any((item) => item.animeid == anime.animeid)) {
+                        // remover de favoritos
+                        favoritesProvider.removeFromFavorites(anime.animeid);
+                      } else {
+                        // Adicionar aos favoritos
+                        favoritesProvider.addToFavorites(anime.animeid);
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    // Check if the animeItem is already in favorites
-                    if (favoritesProvider.favoritesList
-                        .any((item) => item.animeid == anime.animeid)) {
-                      // Remove from favorites
-                      favoritesProvider.removeFromFavorites(anime);
-                    } else {
-                      // Add to favorites
-                      favoritesProvider.addToFavorites(anime);
-                    }
-                  },
-                ),
-                title: Text(
-                  anime.englishName != "UNKNOWN"
-                      ? anime.englishName
-                      : anime.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  title: Text(
+                    anime.englishname != "UNKNOWN"
+                        ? anime.englishname
+                        : anime.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    anime.genres,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                  leading: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 80,
+                      minHeight: 120,
+                      maxWidth: 80,
+                      maxHeight: 120,
+                    ),
+                    child: Image.network(anime.imageURL, fit: BoxFit.cover),
                   ),
                 ),
-                subtitle: Text(
-                  anime.genres,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.black, fontSize: 12),
-                ),
-                leading: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    minWidth: 52.5,
-                    minHeight: 75,
-                    maxWidth: 105,
-                    maxHeight: 150,
-                  ),
-                  child: Image.network( anime.imageURL, fit: BoxFit.cover),
-                )
               ),
             );
           }
@@ -119,57 +125,59 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 );
               },
-              child: ListTile(
-                trailing: IconButton(
-                  icon: Icon(
-                    favoritesProvider.favoritesList
-                        .any((item) => item.animeid == anime.animeid)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: Colors.deepPurple,
+              child: Card(
+                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: ListTile(
+                  trailing: IconButton(
+                    icon: Icon(
+                      favoritesProvider.favoritesList
+                          .any((item) => item.animeid == anime.animeid)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.deepPurple,
+                    ),
+                    onPressed: () {
+                      // Checar se o anime esta na lista de favortios
+                      if (favoritesProvider.favoritesList
+                          .any((item) => item.animeid == anime.animeid)) {
+                        // remover de favoritos
+                        favoritesProvider.removeFromFavorites(anime.animeid);
+                      } else {
+                        // Adicionar aos favoritos
+                        favoritesProvider.addToFavorites(anime.animeid);
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    // Check if the animeItem is already in favorites
-                    if (favoritesProvider.favoritesList
-                        .any((item) => item.animeid == anime.animeid)) {
-                      // Remove from favorites
-                      favoritesProvider.removeFromFavorites(anime);
-                    } else {
-                      // Add to favorites
-                      favoritesProvider.addToFavorites(anime);
-                    }
-                  },
-                ),
-                title: Text(
-                  anime.englishName != "UNKNOWN"
-                      ? anime.englishName
-                      : anime.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                  title: Text(
+                    anime.englishname != "UNKNOWN"
+                        ? anime.englishname
+                        : anime.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                subtitle: Text(
-                  anime.score,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.black, fontSize: 12),
-                ),
-                leading: Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 105,
-                  height: 150,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        anime.imageURL,
+                  subtitle: Text(
+                    anime.score,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                  leading: Container(
+                    margin: const EdgeInsets.all(10),
+                    width: 80,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          anime.imageURL,
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

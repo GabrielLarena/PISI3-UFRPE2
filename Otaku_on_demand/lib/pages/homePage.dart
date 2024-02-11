@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:otaku_on_demand/pages/AnimePage.dart';
 import 'package:otaku_on_demand/pages/listProvider.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
-
 import '../services/favoritosProvider.dart';
 //import 'package:otaku_on_demand/model/animemodel.dart';
 
@@ -44,6 +43,7 @@ class _HomePageListState extends State<HomePageList> {
     final favoritesProvider = Provider.of<FavoritesProvider>(context);
 
     favoritesProvider.getData();
+    firestoreService.fetchData();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +52,11 @@ class _HomePageListState extends State<HomePageList> {
           children: [
             const Text(
               "ANIMES POPULARES",
-              style: TextStyle(color: Color(0xff9029fb), fontSize: 25, fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                color: Color(0xff9029fb),
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Visibility(
               visible: isLoading,
@@ -79,8 +83,8 @@ class _HomePageListState extends State<HomePageList> {
                     SizedBox(
                       width: 210,
                       child: Text(
-                        anime.englishName != "UNKNOWN"
-                            ? anime.englishName
+                        anime.englishname != "UNKNOWN"
+                            ? anime.englishname
                             : anime.name,
                         style: const TextStyle(
                           color: Colors.black,
@@ -129,7 +133,11 @@ class _HomePageListState extends State<HomePageList> {
           children: [
             const Text(
               "ANIMES FAVORITOS",
-              style: TextStyle(color: Color(0xff9029fb), fontSize: 25,fontWeight: FontWeight.bold,),
+              style: TextStyle(
+                color: Color(0xff9029fb),
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Visibility(
               visible: isLoading,
@@ -142,7 +150,7 @@ class _HomePageListState extends State<HomePageList> {
         ),
         favoritesProvider.favoritesList.isEmpty
             ? const Center(
-                // Display a message when the favorites list is empty
+                // Mensagem quando a lista de favoritos estiver vazia
                 child: Text(
                   'Lista de favoritos esta vazia \n Adicione mais animes!',
                   style: TextStyle(
@@ -168,8 +176,8 @@ class _HomePageListState extends State<HomePageList> {
                           SizedBox(
                             width: 210,
                             child: Text(
-                              anime.englishName != "UNKNOWN"
-                                  ? anime.englishName
+                              anime.englishname != "UNKNOWN"
+                                  ? anime.englishname
                                   : anime.name,
                               style: const TextStyle(
                                 color: Colors.black,
@@ -213,7 +221,122 @@ class _HomePageListState extends State<HomePageList> {
                   },
                 ),
               ),
+        FloatingActionButton(
+          onPressed: () {
+            _mostrarPopUpSalvarAnime(context);
+          },
+          backgroundColor: Colors.deepPurple,
+          child: const Icon(
+            Icons.add,
+            color: Colors.orange,
+          ),
+        ),
       ],
+    );
+  }
+  void _mostrarPopUpSalvarAnime(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final firestoreService = Provider.of<FirestoreService>(context, listen: false);
+
+        List<String> inputs = [
+          "Nome do anime",
+          "Nome em inglês",
+          "Nota",
+          "Gênero",
+          "Sinopse",
+          "Tipo (filme, anime, OVA)",
+          "N de Episódios",
+          "Data de lançamento",
+          "Data de estreia",
+          "Estúdio",
+          "Fonte",
+          "Duração",
+          "Classificação indicativa",
+          "Rank",
+          "Popularidade",
+          "Favoritos",
+          "Membros",
+          "URL da imagem"
+        ];
+
+        List<TextEditingController> controllers =
+        List.generate(18, (index) => TextEditingController());
+
+        return AlertDialog(
+          title: const Text('Salvar Anime'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: List.generate(
+                18,
+                    (index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(inputs[index]),
+                      TextField(
+                        controller: controllers[index],
+                        decoration: const InputDecoration(
+                          hintText: 'Digite aqui',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                List<String> labels =
+                controllers.map((controller) => controller.text).toList();
+
+                // Lógica para o botão "Salvar anime"
+                if (labels.any((value) => value.isEmpty)) {
+                  // Pelo menos um campo está vazio, mostrar mensagem de erro
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Preencha todos os campos'),
+                    ),
+                  );
+                } else {
+                  // Todos os campos estão preenchidos, salvar anime
+                  firestoreService.animeAdd(
+                    labels[0],
+                    labels[1],
+                    labels[2],
+                    labels[3],
+                    labels[4],
+                    labels[5],
+                    labels[6],
+                    labels[7],
+                    labels[8],
+                    labels[9],
+                    labels[10],
+                    labels[11],
+                    labels[12],
+                    labels[13],
+                    labels[14],
+                    labels[15],
+                    labels[16],
+                    labels[17],
+                  );
+                  Navigator.of(context).pop();
+                  // Lógica para salvar as informações do anime
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: const Text('Salvar anime'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

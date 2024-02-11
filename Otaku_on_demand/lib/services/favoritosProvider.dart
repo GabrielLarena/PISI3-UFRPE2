@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../model/animemodel.dart';
 
 class FavoritesProvider extends ChangeNotifier {
   List<AnimeItem> favoritesList = [];
 
   Future<void> getData() async {
-    // Fetch user favorites from Firestore based on the user ID
-    // Update favoritesList accordingly
 
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -16,130 +15,146 @@ class FavoritesProvider extends ChangeNotifier {
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection(
-            'users').doc(userId);
+        // Referencia a coleçao usuario
+        DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ??
-            [];
+        // array atual de "favoritos" ou manda uma lista vazia
+        List<DocumentReference> favorites =
+            (await userDocRef.get()).get('favoritos')?.cast<DocumentReference>() ?? [];
 
-        // "favoritos" vira uma List<AnimeItem>
-        favoritesList = favorites.map((item) {
-          return AnimeItem(
-            name: item['Name'] ?? '',
-            englishName: item['English Name'] ?? '',
-            imageURL: item['Image URL'] ?? '',
-            score: item['Score'] ?? '',
-            genres: item['Genres'] ?? '',
-            animeid: item['anime_id'] ?? '',
-            synopsis: item['Synopsis'] ?? '',
-            type: item['Type'] ?? '',
-            episodes: item['Episodes'] ?? '',
-            aired: item['Aired'] ?? '',
-            premiered: item['Premiered'] ?? '',
-            source: item['Source'] ?? '',
-            duration: item['Duration'] ?? '',
-            rating: item['Rating'] ?? '',
-            rank: item['Rank'] ?? '',
-            popularity: item['Popularity'] ?? '',
-            members: item['Members'] ?? '',
-            favorites: item['Favorites'] ?? '',
-            scoredBy: item['Scored By'] ?? '',
-            studios: item['Studios'] ?? '',
-          );
-        }).toList();
+        // Coletando as referencias e adicionando na lista
+        List<AnimeItem> updatedFavoritesList = [];
+        for (DocumentReference animeItemRef in favorites) {
+          DocumentSnapshot animeItemSnapshot;
+          try {
+            animeItemSnapshot = await animeItemRef.get();
+          } catch (e) {
+            SnackBar(
+              content: Text('Erro coletando anime: $e'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            );
+            continue; // Skip para o proximo
+          }
 
-    // Notify listeners about the changes
+          if (animeItemSnapshot.exists) {
+            Map<String, dynamic> animeItemData =
+                animeItemSnapshot.data() as Map<String, dynamic>;
+            updatedFavoritesList.add(AnimeItem(
+              name: animeItemData['Name'] ?? '',
+              englishname: animeItemData['English name'] ?? '',
+              imageURL: animeItemData['Image URL'] ?? '',
+              score: animeItemData['Score'] ?? '',
+              genres: animeItemData['Genres'] ?? '',
+              animeid: animeItemData['anime_id'] ?? '',
+              synopsis: animeItemData['Synopsis'] ?? '',
+              type: animeItemData['Type'] ?? '',
+              episodes: animeItemData['Episodes'] ?? '',
+              aired: animeItemData['Aired'] ?? '',
+              premiered: animeItemData['Premiered'] ?? '',
+              source: animeItemData['Source'] ?? '',
+              duration: animeItemData['Duration'] ?? '',
+              rating: animeItemData['Rating'] ?? '',
+              rank: animeItemData['Rank'] ?? '',
+              popularity: animeItemData['Popularity'] ?? '',
+              members: animeItemData['Members'] ?? '',
+              favorites: animeItemData['Favorites'] ?? '',
+              scoredBy: animeItemData['Scored By'] ?? '',
+              studios: animeItemData['Studios'] ?? '',
+            ));
+          }
+        }
+
+        // Update da lista de favoritos
+        favoritesList = updatedFavoritesList;
+
+        // Notify listeners
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error getting favorites: $e');
+      SnackBar(
+        content: Text('Erro favoritos: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
-
-  Future<void> addToFavorites(AnimeItem animeItem) async {
+  Future<void> addToFavorites(String animeId) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+        // Referencia do usario
+        DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ?? [];
+        print('user: $userDocRef');
 
-        // Add the new AnimeItem to the "favoritos" array
-        favorites.add({
-          'Name': animeItem.name,
-          'Image URL': animeItem.imageURL,
-          'English Name': animeItem.englishName,
-          'Score': animeItem.score,
-          'Genres': animeItem.genres,
-          'anime_id': animeItem.animeid,
-          'Synopsis': animeItem.synopsis,
-          'Type': animeItem.type,
-          'Episodes': animeItem.episodes,
-          'Aired': animeItem.aired,
-          'Premiered': animeItem.premiered,
-          'Source': animeItem.source,
-          'Duration': animeItem.duration,
-          'Rating': animeItem.rating,
-          'Rank': animeItem.rank,
-          'Popularity': animeItem.popularity,
-          'Members': animeItem.members,
-          'Favorites': animeItem.favorites,
-          'Scored By': animeItem.scoredBy,
-          'Studios': animeItem.studios,
-          // Include other properties based on your AnimeItem class
+        // refencia do anime
+        DocumentReference animeItemRef =
+        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
+
+        // adiciona anime nos 'favoritos' array do usuario
+        await userDocRef.update({
+          'favoritos': FieldValue.arrayUnion([animeItemRef]),
         });
 
-        // Update the "favoritos" array in the user's document
-        await userDocRef.update({'favoritos': favorites});
+        print('After update');
 
-        // Update favoritesList accordingly
         await getData();
         notifyListeners();
+
+        print('AnimeItem reference added to favorites successfully.');
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error adding to favorites: $e');
+      SnackBar(
+        content: Text('Erro ao adicionar: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 
-  Future<void> removeFromFavorites(AnimeItem animeItem) async {
+  Future<void> removeFromFavorites(String animeId) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
         String userId = user.uid;
 
-        // Reference to the user's document in the "users" collection
-        DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
+        // Referencia da coleção users do usuario
+        DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(userId);
 
-        // Get the current array of "favoritos" or initialize an empty array
-        List<dynamic> favorites = (await userDocRef.get()).get('favoritos') ?? [];
+        // referencia do documento
+        DocumentReference animeItemRef =
+        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
 
-        // Remove the AnimeItem from the "favoritos" array
-        favorites.removeWhere((item) => item['anime_id'] == animeItem.animeid);
+        // remover o anime de 'favoritos' array do usuario
+        await userDocRef.update({
+          'favoritos': FieldValue.arrayRemove([animeItemRef]),
+        });
 
-        // Update the "favoritos" array in the user's document
-        await userDocRef.update({'favoritos': favorites});
-
-        // Update favoritesList accordingly
+        // Update favoritesList
         await getData();
         notifyListeners();
       } else {
         print('User is null');
       }
     } catch (e) {
-      print('Error removing from favorites: $e');
+      SnackBar(
+        content: Text('Erro ao deletar: $e'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+      );
     }
   }
 }

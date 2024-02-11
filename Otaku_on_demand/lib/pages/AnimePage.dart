@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/model/animemodel.dart';
 import '../services/assistidosProvider.dart';
 import '../services/favoritosProvider.dart';
+import '../services/firestore.dart';
 import 'package:provider/provider.dart';
 
 class AnimeDetailPage extends StatefulWidget {
@@ -19,30 +21,36 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
   bool isFavorite = false;
   bool isInList = false;
 
+  //update para o anime
+  late AnimeItem updatedAnimeItem;
+
   @override
   void initState() {
     super.initState();
 
-    // Access the FavoritesProvider
+    //FavoritesProvider - lista dos favoritos
     favoritesProvider = Provider.of<FavoritesProvider>(context, listen: false);
 
-    // Check if the animeItem is already in favorites
+    //Checa se já esta na lista
     isFavorite = favoritesProvider.favoritesList
         .any((item) => item.animeid == widget.animeItem.animeid);
 
-    // You can also call getFavorites to ensure the list is up-to-date
+    //Update da lista
     favoritesProvider.getData();
 
-    // Access the FavoritesProvider
-    assistidosProvider = Provider.of<AssistidosProvider>(context, listen: false);
+    // assistidosProvider - lista dos assistidos
+    assistidosProvider =
+        Provider.of<AssistidosProvider>(context, listen: false);
 
-    // Check if the animeItem is already in favorites
+    //Checa se o item já esta nos assistidos
     isInList = assistidosProvider.favoritesList
         .any((item) => item.animeid == widget.animeItem.animeid);
 
-    // You can also call getFavorites to ensure the list is up-to-date
+    //update assistidos
     assistidosProvider.getData();
 
+    //updateAnimeItem para fazer o update do CRUD
+    updatedAnimeItem = widget.animeItem;
   }
 
   @override
@@ -55,18 +63,18 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
         backgroundColor: Colors.deepPurple,
         centerTitle: true,
         title: Text(
-          animeItem.englishName != "UNKNOWN"
-              ? animeItem.englishName
+          animeItem.englishname != "UNKNOWN"
+              ? animeItem.englishname
               : animeItem.name,
           style: const TextStyle(
-            color: Colors.white,
+            color: Colors.orange,
             fontSize: 25.0,
             fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.white,
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.orange,
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -88,14 +96,15 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     ElevatedButton.icon(
                       onPressed: () {
                         if (isFavorite) {
                           favoritesProvider
-                              .removeFromFavorites(widget.animeItem);
+                              .removeFromFavorites(widget.animeItem.animeid);
                         } else {
-                          favoritesProvider.addToFavorites(widget.animeItem);
+                          favoritesProvider
+                              .addToFavorites(widget.animeItem.animeid);
                         }
                         setState(() {
                           isFavorite = !isFavorite;
@@ -104,19 +113,17 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.orange,
-                        padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
                       ),
                       icon: Icon(
-                        isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
                       ),
                       label: Text(
                         isFavorite
                             ? 'Remover dos Favoritos'
                             : 'Adicionar aos Favoritos',
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -124,9 +131,10 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       onPressed: () {
                         if (isInList) {
                           assistidosProvider
-                              .removeFromAssistir(widget.animeItem);
+                              .removeFromAssistir(widget.animeItem.animeid);
                         } else {
-                          assistidosProvider.addToAssistir(widget.animeItem);
+                          assistidosProvider
+                              .addToAssistir(widget.animeItem.animeid);
                         }
                         setState(() {
                           isInList = !isInList;
@@ -135,8 +143,8 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.orange,
-                        padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
                       ),
                       icon: Icon(
                         isInList
@@ -145,9 +153,9 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                       ),
                       label: Text(
                         isInList
-                          ? 'Remover do Assistir mais tarde'
-                          : 'Assistir mais tarde',
-                        style: TextStyle(fontSize: 16),
+                            ? 'Remover do Assistir mais tarde'
+                            : 'Assistir mais tarde',
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
@@ -185,6 +193,45 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
                   Text(
                     animeItem.synopsis,
                     style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          _popUpDeletar(context, animeItem.animeid);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple,
+                          foregroundColor: Colors.orange,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                        ),
+                        icon: const Icon(Icons.delete),
+                        label: const Text(
+                          'Deletar Anime',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      const Spacer(),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          //editar
+                          await editAnimeDialog(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.deepPurple,
+                          foregroundColor: Colors.orange,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                        ),
+                        icon: const Icon(Icons.edit),
+                        label: const Text(
+                          'Editar Anime',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -226,6 +273,188 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _popUpDeletar(BuildContext context, String animeid) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Aviso'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Quer mesmo apagar esse anime?'),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        // Lógica para o botão "Sim"
+                        final animeDelete = FirebaseFirestore.instance
+                            .collection('animeItem')
+                            .doc(animeid);
+                        animeDelete.delete();
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF0000),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Sim'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Fecha o pop-up
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                      ),
+                      child: const Text('Não'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  Future<void> editAnimeDialog(BuildContext context) async {
+    final firestoreService =
+        Provider.of<FirestoreService>(context, listen: false);
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController englishNameController = TextEditingController();
+    final TextEditingController genresController = TextEditingController();
+    final TextEditingController synopsisController = TextEditingController();
+    final TextEditingController typeController = TextEditingController();
+    final TextEditingController episodesController = TextEditingController();
+    final TextEditingController premieredController = TextEditingController();
+    final TextEditingController airedController = TextEditingController();
+    final TextEditingController studiosController = TextEditingController();
+    final TextEditingController sourceController = TextEditingController();
+    final TextEditingController durationController = TextEditingController();
+    final TextEditingController ratingController = TextEditingController();
+    final TextEditingController rankController = TextEditingController();
+    final TextEditingController popularityController = TextEditingController();
+    final TextEditingController favoritesController = TextEditingController();
+    final TextEditingController membersController = TextEditingController();
+
+    // Opções iniciais iguais
+    nameController.text = updatedAnimeItem.name;
+    englishNameController.text = updatedAnimeItem.englishname;
+    genresController.text = updatedAnimeItem.genres;
+    synopsisController.text = updatedAnimeItem.synopsis;
+    typeController.text = updatedAnimeItem.type;
+    episodesController.text = updatedAnimeItem.episodes;
+    premieredController.text = updatedAnimeItem.premiered;
+    airedController.text = updatedAnimeItem.aired;
+    studiosController.text = updatedAnimeItem.studios;
+    sourceController.text = updatedAnimeItem.source;
+    durationController.text = updatedAnimeItem.duration;
+    ratingController.text = updatedAnimeItem.rating;
+    rankController.text = updatedAnimeItem.rank;
+    popularityController.text = updatedAnimeItem.popularity;
+    favoritesController.text = updatedAnimeItem.favorites;
+    membersController.text = updatedAnimeItem.members;
+
+    // ShowDialog
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar Anime'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildTextField('Nome', nameController),
+                _buildTextField('Nome em inglês', englishNameController),
+                _buildTextField('Gênero', genresController),
+                _buildTextField('Sinopse', synopsisController),
+                _buildTextField('Tipo (filme, anime, OVA)', typeController),
+                _buildTextField('N de Episódios', episodesController),
+                _buildTextField('Data de lançamento', premieredController),
+                _buildTextField('Data de estreia', airedController),
+                _buildTextField('Estúdio', studiosController),
+                _buildTextField('Fonte', sourceController),
+                _buildTextField('Duração', durationController),
+                _buildTextField('Classificação indicativa', ratingController),
+                _buildTextField('Rank', rankController),
+                _buildTextField('Popularidade', popularityController),
+                _buildTextField('Favoritos', favoritesController),
+                _buildTextField('Membros', membersController),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                // Update do updatedAnimeItem com os novos valores
+                updatedAnimeItem = AnimeItem(
+                  name: nameController.text,
+                  englishname: englishNameController.text,
+                  score: updatedAnimeItem.score,
+                  genres: genresController.text,
+                  synopsis: synopsisController.text,
+                  type: typeController.text,
+                  episodes: episodesController.text,
+                  premiered: premieredController.text,
+                  aired: airedController.text,
+                  studios: studiosController.text,
+                  source: sourceController.text,
+                  duration: durationController.text,
+                  rating: ratingController.text,
+                  rank: rankController.text,
+                  popularity: popularityController.text,
+                  favorites: favoritesController.text,
+                  members: membersController.text,
+                  imageURL: updatedAnimeItem.imageURL,
+                  // imageURL não muda
+                  animeid: updatedAnimeItem.animeid,
+                  // animeid não muda
+                  scoredBy: updatedAnimeItem.scoredBy, // scoredBy não muda
+                );
+
+                //update anime
+                firestoreService.updateAnime(updatedAnimeItem);
+
+                //update da pagina
+                firestoreService.fetchData();
+
+                Navigator.of(context).pop(); //fecha o dialog
+                Navigator.of(context).pop(); // fecha a pagina
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: const Text('Salvar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // constroi os textField do dialog
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+          TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'Digite aqui',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

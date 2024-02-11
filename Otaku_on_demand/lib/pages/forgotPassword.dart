@@ -39,9 +39,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       width: 60,
                       decoration: const BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage(
-                                "assets/images/logotipo.png",
-                              ),)),
+                        image: AssetImage(
+                          "assets/images/logotipo.png",
+                        ),
+                      )),
                     ),
                     const Text(
                       "Otaku on\n demand",
@@ -105,7 +106,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         )),
                     onPressed: () async {
                       try {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+                        await FirebaseAuth.instance.sendPasswordResetEmail(
+                            email: emailController.text);
                       } catch (e) {
                         const SnackBar(
                           content: Text('Erro ao mandar email'),
@@ -113,6 +115,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           duration: Duration(seconds: 4),
                         );
                       }
+                      _showPopup();
                     },
                     child: const Text('Confirmar'),
                   ),
@@ -146,8 +149,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 width: 150.0,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const StartPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const StartPage()));
                   },
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

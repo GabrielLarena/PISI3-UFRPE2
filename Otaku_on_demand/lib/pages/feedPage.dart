@@ -27,7 +27,7 @@ class _FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         leading: GestureDetector(
           onTap: () {
-            // Handle the onTap action here
+            //onTap da imagem
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const StartPage()));
           },
@@ -42,9 +42,11 @@ class _FeedPageState extends State<FeedPage> {
           children: [
             Container(
                 padding: const EdgeInsets.all(8.0),
+                alignment: Alignment.center,
                 child: const Text(
                   'Otaku on Demand',
                   style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
                     fontSize: 25.0,
                   ),
