@@ -17,10 +17,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Color(0xfff2f2f2),
         body: Padding(
           padding: EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: HomePageList(),
-          ),
+          child: HomePageList(),
         ),
       ),
     );
@@ -45,200 +42,213 @@ class _HomePageListState extends State<HomePageList> {
     favoritesProvider.getData();
     firestoreService.fetchData();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-        Row(
-          children: [
-            const Text(
-              "ANIMES POPULARES",
-              style: TextStyle(
-                color: Color(0xff9029fb),
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Visibility(
-              visible: isLoading,
-              child: Container(
-                margin: const EdgeInsets.all(10.0),
-                child: const CircularProgressIndicator(),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 350.0,
-          child: ListView.builder(
-            controller: ScrollController(),
-            scrollDirection: Axis.horizontal,
-            itemCount: firestoreService.animeDataList.length,
-            itemBuilder: (context, index) {
-              final anime = firestoreService.animeDataList[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 210,
-                      child: Text(
-                        anime.englishname != "UNKNOWN"
-                            ? anime.englishname
-                            : anime.name,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // mandar informação do anime
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AnimeDetailPage(
-                              animeItem: anime,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        width: 210,
-                        height: 300,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              anime.imageURL,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-        const Divider(),
-        Row(
-          children: [
-            const Text(
-              "ANIMES FAVORITOS",
-              style: TextStyle(
-                color: Color(0xff9029fb),
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Visibility(
-              visible: isLoading,
-              child: Container(
-                margin: const EdgeInsets.all(10.0),
-                child: const CircularProgressIndicator(),
-              ),
-            ),
-          ],
-        ),
-        favoritesProvider.favoritesList.isEmpty
-            ? const Center(
-                // Mensagem quando a lista de favoritos estiver vazia
-                child: Text(
-                  'Lista de favoritos esta vazia \n Adicione mais animes!',
+        SingleChildScrollView(
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(
+              children: [
+                const Text(
+                  "ANIMES POPULARES",
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
+                    color: Color(0xff9029fb),
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              )
-            : SizedBox(
-                height: 350.0,
-                child: ListView.builder(
-                  controller: ScrollController(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: favoritesProvider.favoritesList.length,
-                  itemBuilder: (context, index) {
-                    final anime = favoritesProvider.favoritesList[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 210,
-                            child: Text(
-                              anime.englishname != "UNKNOWN"
-                                  ? anime.englishname
-                                  : anime.name,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // mandar informação do anime
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AnimeDetailPage(
-                                    animeItem: anime,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.all(10),
-                              width: 210,
-                              height: 300,
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    anime.imageURL,
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                Visibility(
+                  visible: isLoading,
+                  child: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: const CircularProgressIndicator(),
+                  ),
                 ),
+              ],
+            ),
+            SizedBox(
+              height: 350.0,
+              child: ListView.builder(
+                controller: ScrollController(),
+                scrollDirection: Axis.horizontal,
+                itemCount: firestoreService.animeDataList.length,
+                itemBuilder: (context, index) {
+                  final anime = firestoreService.animeDataList[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 210,
+                          child: Text(
+                            anime.englishname != "UNKNOWN"
+                                ? anime.englishname
+                                : anime.name,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // mandar informação do anime
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AnimeDetailPage(
+                                  animeItem: anime,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            width: 210,
+                            height: 300,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  anime.imageURL,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-        FloatingActionButton(
-          onPressed: () {
-            _mostrarPopUpSalvarAnime(context);
-          },
-          backgroundColor: Colors.deepPurple,
-          child: const Icon(
-            Icons.add,
-            color: Colors.orange,
+            ),
+            const Divider(),
+            Row(
+              children: [
+                const Text(
+                  "ANIMES FAVORITOS",
+                  style: TextStyle(
+                    color: Color(0xff9029fb),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Visibility(
+                  visible: isLoading,
+                  child: Container(
+                    margin: const EdgeInsets.all(10.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            ),
+            favoritesProvider.favoritesList.isEmpty
+                ? const SizedBox(
+                    height: 350.0,
+                    child: Center(
+                      // Mensagem quando a lista de favoritos estiver vazia
+                      child: Text(
+                        'Lista de favoritos esta vazia \n Adicione mais animes!',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 350.0,
+                    child: ListView.builder(
+                      controller: ScrollController(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: favoritesProvider.favoritesList.length,
+                      itemBuilder: (context, index) {
+                        final anime = favoritesProvider.favoritesList[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 210,
+                                child: Text(
+                                  anime.englishname != "UNKNOWN"
+                                      ? anime.englishname
+                                      : anime.name,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  // mandar informação do anime
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AnimeDetailPage(
+                                        animeItem: anime,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.all(10),
+                                  width: 210,
+                                  height: 300,
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        anime.imageURL,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+          ]),
+        ),
+        Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: FloatingActionButton(
+            onPressed: () {
+              _mostrarPopUpSalvarAnime(context);
+            },
+            backgroundColor: Colors.deepPurple,
+            child: const Icon(
+              Icons.add,
+              color: Colors.orange,
+            ),
           ),
         ),
       ],
     );
   }
+
   void _mostrarPopUpSalvarAnime(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final firestoreService = Provider.of<FirestoreService>(context, listen: false);
+        final firestoreService =
+            Provider.of<FirestoreService>(context, listen: false);
 
         List<String> inputs = [
           "Nome do anime",
@@ -262,7 +272,7 @@ class _HomePageListState extends State<HomePageList> {
         ];
 
         List<TextEditingController> controllers =
-        List.generate(18, (index) => TextEditingController());
+            List.generate(18, (index) => TextEditingController());
 
         return AlertDialog(
           title: const Text('Salvar Anime'),
@@ -270,7 +280,7 @@ class _HomePageListState extends State<HomePageList> {
             child: Column(
               children: List.generate(
                 18,
-                    (index) => Padding(
+                (index) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +303,7 @@ class _HomePageListState extends State<HomePageList> {
             ElevatedButton(
               onPressed: () {
                 List<String> labels =
-                controllers.map((controller) => controller.text).toList();
+                    controllers.map((controller) => controller.text).toList();
 
                 // Lógica para o botão "Salvar anime"
                 if (labels.any((value) => value.isEmpty)) {

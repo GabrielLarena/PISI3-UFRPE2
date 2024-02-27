@@ -56,7 +56,7 @@ class _FeedPageState extends State<FeedPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            color: Colors.white,
+            color: Colors.orange,
             // botar pesquisa de anime
             onPressed: () {
               Navigator.push(context,
@@ -72,7 +72,7 @@ class _FeedPageState extends State<FeedPage> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xff9029fb),
         selectedItemColor: Colors.white,
-        selectedIconTheme: const IconThemeData(color: Colors.white),
+        selectedIconTheme: const IconThemeData(color: Colors.orange),
         selectedLabelStyle: const TextStyle(color: Colors.white),
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
