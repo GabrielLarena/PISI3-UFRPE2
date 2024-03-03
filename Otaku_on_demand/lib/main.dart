@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:otaku_on_demand/services/commentProvider.dart';
 import 'package:otaku_on_demand/services/favoritosProvider.dart';
 import 'package:otaku_on_demand/services/assistidosProvider.dart';
 import 'package:otaku_on_demand/services/firestore.dart';
@@ -31,6 +32,9 @@ void main() async {
         ),
         ChangeNotifierProvider.value(
           value: assistidosProvider,
+        ),
+        ChangeNotifierProvider.value(
+          value: ReviewService(),
         ),
       ],
       child: const MyApp(),

@@ -1,5 +1,6 @@
 import 'package:otaku_on_demand/pages/homePage.dart';
 import 'package:otaku_on_demand/pages/listPage.dart';
+import 'package:otaku_on_demand/pages/reviewPage.dart';
 import 'package:otaku_on_demand/pages/startPage.dart';
 import 'package:otaku_on_demand/pages/searchPage.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _FeedPageState extends State<FeedPage> {
   List<Widget> widgetList = [
     const HomePage(),
     const ListPage(),
+    const ReviewPage(),
     const UserConfig(),
   ];
 
@@ -83,14 +85,9 @@ class _FeedPageState extends State<FeedPage> {
         currentIndex: myIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Feed"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "Listas",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Usuário",
-          )
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: "Listas",),
+          BottomNavigationBarItem(icon: Icon(Icons.comment), label: "Reviews",),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Usuário",)
         ],
       ),
     );

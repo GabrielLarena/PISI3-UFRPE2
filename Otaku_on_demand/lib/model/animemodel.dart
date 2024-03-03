@@ -1,4 +1,3 @@
-
 class AnimeList {
   String title;
 
@@ -11,6 +10,57 @@ List<AnimeList> animeList = [
   AnimeList(title: 'Favoritos'),
   AnimeList(title: 'Assistir mais tarde'),
 ];
+
+class ReviewItem {
+  final String reviewID;
+  final String title;
+  final String review;
+  final Object animeid;
+  final String animescore;
+
+  ReviewItem({
+    required this.reviewID,
+    required this.title,
+    required this.review,
+    required this.animeid,
+    required this.animescore
+  });
+
+  factory ReviewItem.fromMap(Map<String, dynamic> map) {
+    return ReviewItem(
+      reviewID: map['reviewID'] ?? '',
+      title: map['title'] ?? '',
+      review: map['review'] ?? '',
+      animeid: map['animeid'] ?? '',
+      animescore: map['animescore'] ?? '',
+    );
+  }
+
+  //mapeamento Json para mandar para o databse
+  //mudar ao completar a data do anime
+  Map<String, dynamic> toJson() =>
+      {
+        'reviewID': reviewID,
+        'title': title,
+        'review': review,
+        'animeid': animeid,
+        'animescore': animescore,
+      };
+
+  //coletar informação do firebase e transformar em
+  // objeto animeItem que pode ser lido
+  //mudar ao completar a data do anime
+  static ReviewItem fromJson(Map<String, dynamic> json) =>
+      ReviewItem(
+        reviewID: json['reviewID'],
+        title: json['title'],
+        review: json['review'],
+        animeid: json['animeid'],
+        animescore: json['animescore'],
+      );
+
+
+}
 
 class AnimeItem {
   final String animeid;

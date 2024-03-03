@@ -9,7 +9,7 @@ class FirestoreService extends ChangeNotifier {
   Future<void> fetchData() async {
     // pegar data da Firebase
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('animeItem')
+        .collection('animeTest')
         //teste de limite
         //.limit(8632)
         .orderBy('Score', descending: true)
@@ -129,7 +129,7 @@ class FirestoreService extends ChangeNotifier {
     try {
       // Reference to the document in the 'animeItem' collection
       DocumentReference animeDocRef =
-      FirebaseFirestore.instance.collection('animeItem').doc(updatedAnime.animeid);
+      FirebaseFirestore.instance.collection('animeTest').doc(updatedAnime.animeid);
 
       // Update the document with the new values
       await animeDocRef.update({
@@ -163,7 +163,7 @@ class FirestoreService extends ChangeNotifier {
   // DELETE: deletar um anime pelo ID
   Future<void> animeDelete(String anime, String animeId) async {
     final animeDelete =
-        FirebaseFirestore.instance.collection('animeItem').doc(animeId);
+        FirebaseFirestore.instance.collection('animeTest').doc(animeId);
     animeDelete.delete();
   }
 }

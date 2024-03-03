@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:otaku_on_demand/model/animemodel.dart';
 import '../services/assistidosProvider.dart';
+import '../services/commentProvider.dart';
 import '../services/favoritosProvider.dart';
 import '../services/firestore.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +78,16 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           color: Colors.orange,
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.comment_outlined),
+            color: Colors.orange,
+            // botar pesquisa de anime
+            onPressed: () {
+              _mostrarPopUpSalvarReview(context);
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -273,6 +284,86 @@ class _AnimeDetailPageState extends State<AnimeDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _mostrarPopUpSalvarReview(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+
+        final reviewProvider =
+        Provider.of<ReviewService>(context, listen: false);
+
+        List<String> inputs = [
+          "Titulo da review",
+          "Escreva a review aqui",
+          "Nota do anime",
+        ];
+
+        List<TextEditingController> controllers =
+        List.generate(3, (index) => TextEditingController());
+
+        return AlertDialog(
+          title: const Text('Fazer Review'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: List.generate(
+                3,
+                    (index) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(inputs[index]),
+                      TextField(
+                        controller: controllers[index],
+                        decoration: const InputDecoration(
+                          hintText: 'Digite aqui',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                List<String> labels =
+                controllers.map((controller) => controller.text).toList();
+
+                // Lógica para o botão "Salvar anime"
+                if (labels.any((value) => value.isEmpty)) {
+                  // Pelo menos um campo está vazio, mostrar mensagem de erro
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Preencha todos os campos'),
+                    ),
+                  );
+                } else {
+                  // Todos os campos estão preenchidos, salvar anime
+                  reviewProvider.reviewAdd(
+                    labels[0],
+                    labels[1],
+                    widget.animeItem.animeid,
+                    labels[2],
+                  );
+                  Navigator.of(context).pop();
+                  // Lógica para salvar as informações do anime
+                }
+                reviewProvider.fetchReviews();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: const Text('Salvar review'),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -94,8 +94,6 @@ class FavoritesProvider extends ChangeNotifier {
         DocumentReference userDocRef =
         FirebaseFirestore.instance.collection('users').doc(userId);
 
-        print('user: $userDocRef');
-
         // refencia do anime
         DocumentReference animeItemRef =
         FirebaseFirestore.instance.collection('animeItem').doc(animeId);
