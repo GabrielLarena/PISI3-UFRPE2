@@ -35,6 +35,7 @@ class ReviewPageList extends StatefulWidget {
 
 class _ReviewPageListState extends State<ReviewPageList> {
   bool isLoading = false;
+  String name = "";
 
   late ReviewItem updatedReview;
 
@@ -47,9 +48,24 @@ class _ReviewPageListState extends State<ReviewPageList> {
     firestoreService.fetchData();
 
     return Scaffold(
-      backgroundColor: Color(0xfff2f2f2),
+      backgroundColor: const Color(0xfff2f2f2),
+      appBar: AppBar(
+        leading: const Icon(Icons.search),
+        title: Card(
+          child: TextField(
+            decoration: const InputDecoration(
+              hintText: 'Procurar review por titulo',
+            ),
+            onChanged: (val) {
+              setState(() {
+                name = val;
+              });
+            },
+          ),
+        ),
+      ),
       body: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,95 +95,189 @@ class _ReviewPageListState extends State<ReviewPageList> {
           (anime) => anime.animeid == review.animeid,
     );
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AnimeDetailPage(animeItem: anime),
+    if (name.isEmpty) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AnimeDetailPage(animeItem: anime),
+            ),
+          );
+        },
+        child: Card(
+          elevation: 3,
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-        );
-      },
-      child: Card(
-        elevation: 3,
-        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  anime.imageURL,
-                  width: 100,
-                  height: 150,
-                  fit: BoxFit.cover,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    anime.imageURL,
+                    width: 100,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      review.title,
-                      style: TextStyle(
-                        color: Colors.deepPurple,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      '${anime.name} - Score: ${review.animescore}',
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Review: ${review.review}',
-                      maxLines: 6,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 14,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          color: Colors.orange,
-                          onPressed: () {
-                            editReviewDialog(context, review);
-                          },
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.title,
+                        style: const TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          color: Colors.orange,
-                          onPressed: () {
-                            _popUpDeletar(context, review.reviewID);
-                          },
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${anime.name} - Score: ${review.animescore}',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Review: ${review.review}',
+                        maxLines: 6,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            color: Colors.orange,
+                            onPressed: () {
+                              editReviewDialog(context, review);
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            color: Colors.orange,
+                            onPressed: () {
+                              _popUpDeletar(context, review.reviewID);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
+    if (review.title.toLowerCase().contains(name.toLowerCase())) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AnimeDetailPage(animeItem: anime),
+            ),
+          );
+        },
+        child: Card(
+          elevation: 3,
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding:const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    anime.imageURL,
+                    width: 100,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.title,
+                        style: const TextStyle(
+                          color: Colors.deepPurple,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${anime.name} - Score: ${review.animescore}',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Review: ${review.review}',
+                        maxLines: 6,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            color: Colors.orange,
+                            onPressed: () {
+                              editReviewDialog(context, review);
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            color: Colors.orange,
+                            onPressed: () {
+                              _popUpDeletar(context, review.reviewID);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+      return const Column();
   }
 
 
